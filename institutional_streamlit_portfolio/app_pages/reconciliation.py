@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
 import pandas as pd
@@ -27,6 +27,28 @@ if st.session_state.get("recon_notice"):
 
 st.markdown("**Reconciliation procedure:** Select a difference, compare the three source records and record a verified reason and action.", text_alignment="justify")
 st.caption("This example compares fund accounting, custodian and investment-manager records. Real source choices depend on the control.")
+
+st.subheader("Exception overview across all funds")
+overview = []
+for case in st.session_state.breaks:
+    source_values = [float(case[name]) for name in ("Fund accounting amount", "Custodian amount", "Investment manager amount")]
+    overview.append({
+        "Break ID": case["Break ID"], "Fund": case["Fund"],
+        "Difference type": case["Difference type"],
+        "Monetary difference (EUR)": max(source_values) - min(source_values),
+        "Workflow status": case["Workflow status"],
+    })
+aligned_dataframe(pd.DataFrame(overview), hide_index=True)
+st.caption(
+    f"{len(overview)} exceptions across all funds; {len(current_fund_breaks())} belong to the selected fund, "
+    f"{st.session_state.context['fund']}. A zero monetary difference can still have a date or attribute mismatch. "
+    "Only exceptions belonging to the selected valuation run affect its readiness."
+)
+def inspect_enterprise_register():
+    st.session_state.recon_scope = "Enterprise demonstration register"
+
+st.button("Inspect all fund exceptions", on_click=inspect_enterprise_register,
+          help="Displays all exceptions for inspection. The enterprise register remains read-only.")
 
 scope = st.segmented_control("Register scope", ["Current valuation run", "Enterprise demonstration register"], default=None if "recon_scope" in st.session_state else "Current valuation run", key="recon_scope", required=True)
 current_scope = scope == "Current valuation run"
@@ -101,6 +123,28 @@ if rows:
         else:
             aligned_dataframe(source_df, hide_index=True, width="stretch")
             st.info("Source amounts agree. Review dates, identifiers and other attributes before confirming the match.")
+        if item["Difference type"] == "Settlement-date mismatch":
+            settlement = st.session_state.context["valuation_date"] + timedelta(days=2)
+            date_evidence = pd.DataFrame({
+                "Compared source": ["Fund-accounting record", "Custodian confirmation", "Investment-manager record"],
+                "Illustrative settlement date": [settlement.isoformat(), (settlement + timedelta(days=1)).isoformat(), settlement.isoformat()],
+                "Control result": ["Date conflict", "Date conflict", "Date conflict"],
+            })
+            date_style = date_evidence.style.set_properties(
+                subset=["Illustrative settlement date", "Control result"],
+                **{"color": "#991b1b", "background-color": "#fee2e2", "font-weight": "700", "text-align": "center"})
+            st.table(date_style, hide_index=True)
+            st.error("Settlement-date exception: the custodian confirmation is one day later. The three EUR 1,450,000 amounts agree; EUR 1,450,000 is the transaction under investigation, not a monetary shortfall.")
+            st.markdown("**Required investigation:** verify the contractual settlement date against the executed trade and confirmation, obtain a corrected record from the responsible source, and record the evidence. An accounting amount correction is not required solely because dates differ.")
+            st.caption("Dates above are illustrative evidence generated relative to the selected valuation date. They demonstrate the adjacent-date conflict described in the original case; they are not externally verified dates.")
+        else:
+            investigation = {
+                "Coupon-accrual variance": "Reconcile the coupon period and day-count convention. The source difference is EUR 1,400; determine which accrual is correct before posting or requesting a correction.",
+                "Contract-multiplier mismatch": "Verify the contract specification, quantity and multiplier against the broker confirmation. The source difference is EUR 3,200,000; correct the affected source and recalculate where required.",
+                "Rounding difference": "Compare conversion precision and rounding rules. The source difference is EUR 0.45; acceptance requires documented policy and supporting evidence.",
+            }
+            if item["Difference type"] in investigation:
+                st.markdown(f"**Required investigation:** {investigation[item['Difference type']]}")
         st.markdown(f"**Suspected cause:** {item['Root cause']}")
         st.caption("A suspected cause becomes a confirmed cause only after the analyst obtains supporting evidence.")
         if selected_id in st.session_state.resolutions:

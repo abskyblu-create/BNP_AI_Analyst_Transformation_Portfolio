@@ -362,6 +362,23 @@ class StreamlitWorkflowTests(unittest.TestCase):
         self.resolve_current_exception()
         self.assertTrue(any("Disposition saved" in message.value for message in self.app.success))
 
+    def test_all_four_exception_cases_remain_visible_and_date_conflict_is_explicit(self):
+        self.page("reconciliation")
+        self.assertEqual(len(self.app.session_state["breaks"]), 4)
+        overview = self.app.table[0].value
+        self.assertEqual(set(overview["Break ID"]), {"BRK-10421", "BRK-10422", "BRK-10423", "BRK-10424"})
+        for actual, expected in zip(overview["Monetary difference (EUR)"], [0, 1400, 3200000, 0.45]):
+            self.assertAlmostEqual(actual, expected)
+        self.assertTrue(any("custodian confirmation is one day later" in message.value for message in self.app.error))
+        self.click("Inspect all fund exceptions")
+        self.widget("selectbox", "Exception identifier").select("BRK-10422")
+        self.app.run()
+        self.assert_no_app_exception()
+        self.assertTrue(self.widget("button", "Record disposition").disabled)
+        self.click("Open selected exception in its valuation run")
+        self.assertEqual(self.app.session_state["context"]["fund"], "Meridian Bond Fund")
+        self.assertFalse(self.widget("button", "Record disposition").disabled)
+
     def test_accounting_correction_cannot_be_posted_twice(self):
         self.page("reconciliation")
         self.widget("selectbox", "Proposed disposition").select("Post accounting correction and require recalculation")
