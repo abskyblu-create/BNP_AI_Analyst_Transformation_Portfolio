@@ -33,7 +33,7 @@ def control_warning(body: str, **options):
 def _control_cell_style(value) -> str:
     is_failure = value is False or (type(value).__name__ == "bool_" and not value)
     if isinstance(value, str):
-        is_failure = bool(re.search(r"\b(failed|blocked|blocking|warning|late|rejected|not met|below policy buffer|projected overdraft)\b", value, re.I))
+        is_failure = bool(re.search(r"\b(failed|blocked|blocking|warning|late|rejected|not met|below policy buffer|projected overdraft|mismatch|breach|stale|open|under investigation|awaiting verification|escalated)\b", value, re.I))
     return "background-color: #fee2e2; color: #991b1b; font-weight: 700" if is_failure else ""
 
 
@@ -41,7 +41,13 @@ def metric_row(items: list[tuple[str, str, str]]) -> None:
     columns = st.columns(len(items), gap="medium", vertical_alignment="top")
     for column, (label, value, explanation) in zip(columns, items):
         with column:
-            result_metric(label, value, help=explanation, border=True)
+            alert = False
+            if any(term in label.lower() for term in ("open exception", "under investigation", "nav impact", "difference", "mismatch", "variance")):
+                match = re.search(r"[-+]?\d[\d,]*(?:\.\d+)?", str(value))
+                if match:
+                    number = float(match.group().replace(",", ""))
+                    alert = number > 0 if "variance" in label.lower() else abs(number) > 0.005
+            result_metric(label, value, help=explanation, border=True, alert=alert)
 
 
 def _table_options(data, options: dict) -> dict:
@@ -99,6 +105,17 @@ def aligned_dataframe(data, **options):
     )]
     if control_columns:
         styled = styled.map(_control_cell_style, subset=control_columns)
+    exception_columns = [name for name in visible if str(name) in {
+        "Break ID", "Amount under investigation (EUR)", "Impact (basis points)",
+    }]
+    if "Workflow status" in frame and exception_columns:
+        for row_index in frame.index:
+            if frame.loc[row_index, "Workflow status"] not in {"Resolved", "Accepted within policy tolerance"}:
+                styled = styled.set_properties(subset=pd.IndexSlice[[row_index], exception_columns],
+                    **{"background-color": "#fee2e2", "color": "#991b1b", "font-weight": "700"})
+    for name in visible:
+        if any(term in str(name).lower() for term in ("difference", "variance", "mismatch")) and pd.api.types.is_numeric_dtype(frame[name]):
+            styled = styled.map(lambda value: "background-color: #fee2e2; color: #991b1b; font-weight: 700" if pd.notna(value) and abs(value) > 0.005 else "", subset=[name])
     if labels:
         styled = styled.relabel_index([labels.get(name, name) for name in visible], axis="columns")
     return st.table(styled, hide_index=options.get("hide_index", True), width="stretch")
@@ -131,7 +148,7 @@ def readable_chart(chart, **options):
 def run_stage_bar() -> None:
     stage = st.session_state.run_stage
     index = RUN_STAGES.index(stage)
-    st.progress((index + 1) / len(RUN_STAGES), text=f"Current run status: {stage}")
+    st.progress(index / (len(RUN_STAGES) - 1), text=f"Current run status: {stage} · {index} of {len(RUN_STAGES) - 1} transitions complete")
     st.caption(" → ".join(RUN_STAGES))
 
 

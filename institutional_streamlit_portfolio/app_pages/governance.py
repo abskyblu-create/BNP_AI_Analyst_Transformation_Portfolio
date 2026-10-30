@@ -25,6 +25,8 @@ page_header(
     ":material/verified_user:",
 )
 run_stage_bar()
+if st.session_state.get("review_notice"):
+    st.success(st.session_state.pop("review_notice"))
 
 next_action = {
     "Draft": "Start in the Net Asset Value workbench: calculate a draft value, then clear its reconciliation exceptions.",
@@ -82,7 +84,8 @@ with review_tab:
             invalidate_downstream("The preparer checklist changed after review.", keep_calculation=True)
         st.session_state.review_checklist = updated_checklist
         log_event("Preparer checklist saved", "Complete" if all(updated_checklist.values()) else "Incomplete", "Synthetic fund-accounting preparer", f"{sum(updated_checklist.values())} of {len(updated_checklist)} checks selected.")
-        st.success("Checklist saved for this session.")
+        st.session_state.review_notice = "Checklist saved. Review eligibility and lifecycle status have been refreshed."
+        st.rerun()
 
     preparer = st.selectbox("Synthetic preparer identity", PREPARERS, index=0)
     ready_for_preparer = st.session_state.run_stage == "Reconciliation cleared" and all(st.session_state.review_checklist.values())
@@ -110,6 +113,8 @@ with review_tab:
         )
         if version_mismatch:
             st.error("The preparer record belongs to an earlier run version. Repeat preparer review.")
+        elif st.session_state.run_stage == "Preparer reviewed" and not checker_attests:
+            st.info("Select the checker review confirmation above to enable independent checker approval.")
         if st.button("Simulate independent checker approval", disabled=st.session_state.run_stage != "Preparer reviewed" or version_mismatch or not checker_attests):
             st.session_state.checker = {
                 "Actor": checker,

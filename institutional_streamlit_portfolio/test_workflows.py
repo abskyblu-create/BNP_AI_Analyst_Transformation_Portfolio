@@ -351,6 +351,28 @@ class StreamlitWorkflowTests(unittest.TestCase):
             with self.subTest(page=name):
                 self.page(name)
 
+    def test_enterprise_exception_can_open_editable_run(self):
+        self.page("reconciliation")
+        self.widget("segmented_control", "Register scope").set_value("Enterprise demonstration register")
+        self.app.run()
+        self.assertTrue(self.widget("button", "Record disposition").disabled)
+        self.click("Open selected exception in its valuation run")
+        self.assertEqual(self.widget("segmented_control", "Register scope").value, "Current valuation run")
+        self.assertFalse(self.widget("button", "Record disposition").disabled)
+        self.resolve_current_exception()
+        self.assertTrue(any("Disposition saved" in message.value for message in self.app.success))
+
+    def test_accounting_correction_cannot_be_posted_twice(self):
+        self.page("reconciliation")
+        self.widget("selectbox", "Proposed disposition").select("Post accounting correction and require recalculation")
+        self.app.run()
+        before = self.app.session_state["valuation"]["portfolio"]
+        self.resolve_current_exception()
+        self.assertEqual(self.app.session_state["valuation"]["portfolio"], before + 1_000)
+        self.click("Record disposition")
+        self.assertEqual(self.app.session_state["valuation"]["portfolio"], before + 1_000)
+        self.assertTrue(any("cannot be posted twice" in message.value for message in self.app.error))
+
     def test_guided_pipeline_builds_the_case_one_automatic_stage_at_a_time(self):
         self.page("guided_pipeline")
         self.assertEqual(self.app.session_state["guided_pipeline_completed"], 0)

@@ -339,6 +339,8 @@ with result_tab:
             )
 
 with controls_tab:
+    if st.session_state.get("readiness_notice"):
+        st.success(st.session_state.pop("readiness_notice"))
     explain('quality')
     st.subheader("Source-readiness controls")
     st.markdown("These controls apply to the current run and version. Saving a change invalidates any later review or approval.", text_alignment="justify")
@@ -354,7 +356,8 @@ with controls_tab:
         if updated != qi:
             st.session_state.quality_inputs = updated
             invalidate_downstream("Source-readiness assessment changed after calculation.", keep_calculation=True)
-        st.success("Source-readiness assessment saved.")
+        st.session_state.readiness_notice = "Source-readiness assessment saved. Lifecycle status and review eligibility have been refreshed."
+        st.rerun()
 
     issues = []
     if not st.session_state.valuation_result:

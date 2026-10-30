@@ -10,7 +10,7 @@ from ui import aligned_dataframe
 
 from learning import explain
 
-from state import current_fund_breaks, invalidate_downstream, log_event
+from state import begin_new_run, current_fund_breaks, invalidate_downstream, log_event
 from ui import metric_row, module_footer, page_header, run_stage_bar
 
 
@@ -22,11 +22,13 @@ page_header(
 )
 with st.expander("See review status"):
     run_stage_bar()
+if st.session_state.get("recon_notice"):
+    st.success(st.session_state.pop("recon_notice"))
 
 st.markdown("**Reconciliation procedure:** Select a difference, compare the three source records and record a verified reason and action.", text_alignment="justify")
 st.caption("This example compares fund accounting, custodian and investment-manager records. Real source choices depend on the control.")
 
-scope = st.segmented_control("Register scope", ["Current valuation run", "Enterprise demonstration register"], default="Current valuation run")
+scope = st.segmented_control("Register scope", ["Current valuation run", "Enterprise demonstration register"], default=None if "recon_scope" in st.session_state else "Current valuation run", key="recon_scope", required=True)
 current_scope = scope == "Current valuation run"
 rows = current_fund_breaks() if current_scope else st.session_state.breaks
 df = pd.DataFrame(rows)
@@ -66,6 +68,14 @@ if not current_scope:
 if rows:
     selected_id = st.selectbox("Exception identifier", [row["Break ID"] for row in rows], key="recon_selected_break")
     item = next(row for row in st.session_state.breaks if row["Break ID"] == selected_id)
+    if not current_scope:
+        def open_exception_run():
+            if item["Fund"] != st.session_state.context["fund"]:
+                begin_new_run(item["Fund"], st.session_state.context["valuation_date"])
+                st.session_state.global_fund = item["Fund"]
+            st.session_state.recon_scope = "Current valuation run"
+        st.button("Open selected exception in its valuation run", type="primary", on_click=open_exception_run,
+                  help="Switches to the selected fund and enables disposition and scenario actions. A different fund starts a new valuation run.")
     with st.container(border=True):
         st.markdown(f"**{item['Fund']} · {item['Instrument']}**")
         st.caption(f"{item['Difference type']} · {item['Control layer']} · {item['Severity']} severity")
@@ -77,7 +87,20 @@ if rows:
             ],
             columns=["Compared source", f"Amount ({item['Source currency']})"],
         )
-        aligned_dataframe(source_df, hide_index=True, width="stretch")
+        amounts = source_df.iloc[:, 1].astype(float)
+        if amounts.max() - amounts.min() > 0.005:
+            # Highlight every value participating in a disagreement; no source
+            # is labelled authoritative before evidence is reviewed.
+            source_df["Difference from fund accounting"] = amounts - amounts.iloc[0]
+            styled_sources = source_df.style.format({source_df.columns[1]: "{:,.2f}", "Difference from fund accounting": "{:+,.2f}"})
+            styled_sources = styled_sources.set_properties(subset=[source_df.columns[1]],
+                **{"color": "#991b1b", "background-color": "#fee2e2", "font-weight": "700", "text-align": "center"})
+            styled_sources = styled_sources.map(lambda value: "color: #991b1b; background-color: #fee2e2; font-weight: 700" if abs(value) > 0.005 else "", subset=["Difference from fund accounting"])
+            st.table(styled_sources, hide_index=True)
+            st.error(f"Source amounts disagree. Maximum source spread: {item['Source currency']} {amounts.max() - amounts.min():,.2f}. Confirm the authoritative record before resolving.")
+        else:
+            aligned_dataframe(source_df, hide_index=True, width="stretch")
+            st.info("Source amounts agree. Review dates, identifiers and other attributes before confirming the match.")
         st.markdown(f"**Suspected cause:** {item['Root cause']}")
         st.caption("A suspected cause becomes a confirmed cause only after the analyst obtains supporting evidence.")
         if selected_id in st.session_state.resolutions:
@@ -94,7 +117,8 @@ if rows:
             "Escalate and place the valuation on hold",
         ],
     )
-    with st.form("resolution_form"):
+    with st.form(f"resolution_form_{selected_id}"):
+        st.caption("Required: confirmed cause and action (at least 20 characters each), plus an evidence reference (at least 4 characters). Tolerance acceptance also requires a policy reference.")
         confirmed_cause = st.text_area("Confirmed root cause", placeholder="State what happened, which record was wrong and why.")
         action = st.text_area("Corrective or follow-up action", placeholder="Describe the action performed or requested and the verification required.")
         a, b, c = st.columns(3)
@@ -112,6 +136,9 @@ if rows:
 
     if submitted:
         errors = []
+        previous = st.session_state.resolutions.get(selected_id)
+        if disposition == "Post accounting correction and require recalculation" and previous and previous["Accounting adjustment"]["Signed amount (EUR)"]:
+            errors.append("An accounting correction has already been applied for this exception. Review the recorded adjustment before entering a further correction; it cannot be posted twice.")
         if len(confirmed_cause.strip()) < 20:
             errors.append("Provide a specific confirmed cause of at least 20 characters.")
         if len(action.strip()) < 20:
@@ -172,7 +199,7 @@ if rows:
             else:
                 invalidate_downstream(f"Reconciliation disposition for {selected_id} changed to {new_status}.", keep_calculation=True)
             log_event("Reconciliation disposition recorded", new_status, owner, f"{selected_id}; {disposition}; evidence {evidence.strip()}.")
-            st.success("Disposition recorded and later lifecycle decisions invalidated where applicable.")
+            st.session_state.recon_notice = f"Disposition saved for {selected_id}: {new_status}. " + ("Accounting inputs updated. Recalculate Net Asset Value before review." if adjustment_key else "Review and approval evidence must be refreshed.")
             st.rerun()
 
     if item["Workflow status"] in {"Resolved", "Accepted within policy tolerance"}:
@@ -206,6 +233,7 @@ if st.button("Inject a synthetic stale-price exception", icon=":material/add_ale
         }
     )
     st.session_state.quality_inputs["stale_price"] = True
+    st.session_state.recon_notice = "Stale-price exception added. Resolve its disposition, then verify the price evidence and update Source-readiness controls in the NAV workbench."
     invalidate_downstream(f"New run-linked exception {new_id} was created.", keep_calculation=True)
     log_event("Synthetic exception injected", "Open", "System", new_id)
     st.rerun()
