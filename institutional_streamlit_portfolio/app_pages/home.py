@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import streamlit as st
 
 from data import CAPABILITY_PILLARS, PROFESSIONAL_PROFILE, PROJECTS
 
 
 st.caption("ANKIT BHATT  /  FINANCE OPERATIONS × DATA × CONTROLLED AI")
-st.image("assets/portfolio_hero.webp", width="stretch")
+ASSET_DIR = Path(__file__).resolve().parents[1] / "assets"
+
+st.image(ASSET_DIR / "portfolio_hero.webp", width="stretch")
 st.title("From business understanding to engineered transformation")
 st.markdown(
     "A professional portfolio from an **AI Analyst internship within Global Fund Administration transformation "

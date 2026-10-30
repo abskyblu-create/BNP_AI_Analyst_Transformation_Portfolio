@@ -424,7 +424,9 @@ Before deploying the current nested app:
 
 1. Review the publication files, create a repository and connect the source to it.
 2. Resolve root-directory paths for the logo and hero image, and verify theme loading. Community Cloud starts from the repository root; current local instructions start from the app subdirectory. Follow the [official file-organisation guidance](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/file-organization).
-3. Select the repository, branch and `institutional_streamlit_portfolio/app.py` entry point in Community Cloud. Choose the Python version deliberately and configure public access.
+3. Select the repository, branch `main` and `institutional_streamlit_portfolio/app.py` entry point in Community Cloud.
+4. Open **Advanced settings**, select Python 3.11 to match the tested container, and leave Secrets empty because this portfolio requires no credentials.
+5. Choose an available `streamlit.app` subdomain and deploy. Future pushes to `main` will update the hosted app automatically.
 4. Verify pages, images, exports and run controls in the hosted environment before sharing its URL.
 
 Once connected, pushes to the deployment branch update the app. CI alone does not establish that connection. Community Cloud has resource limits and sleeps after 12 hours without traffic; visitors can wake it. See [deployment](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy) and [management and limitations](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app).

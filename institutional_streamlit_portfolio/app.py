@@ -1,12 +1,17 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from pathlib import Path
 
 import streamlit as st
 
 from data import FUNDS, PROFESSIONAL_PROFILE
 from styles import apply_layout
 from state import RUN_STAGES, begin_new_run, initialize_session, log_event
+
+
+APP_DIR = Path(__file__).resolve().parent
+ASSET_DIR = APP_DIR / "assets"
 
 
 st.set_page_config(
@@ -34,7 +39,7 @@ def _reset_display_size() -> None:
     st.session_state.portfolio_text_size_slider = 18
     st.session_state.portfolio_content_width = "Full width"
 
-st.logo("assets/logo.svg", size="large")
+st.logo(ASSET_DIR / "logo.svg", size="large")
 
 
 pages = {
@@ -119,7 +124,7 @@ if "global_valuation_date" not in st.session_state:
     st.session_state.global_valuation_date = st.session_state.context["valuation_date"]
 
 with st.sidebar:
-    st.image("assets/logo.svg", width="stretch")
+    st.image(ASSET_DIR / "logo.svg", width="stretch")
     st.caption("TRANSFORMATION PORTFOLIO")
     st.page_link("app_pages/home.py", label="Overview", icon=":material/home:")
     st.page_link("app_pages/contents.py", label="Contents & navigation", icon=":material/toc:")
