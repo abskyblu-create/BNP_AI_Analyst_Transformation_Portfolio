@@ -1,0 +1,8 @@
+# Explicit development override: edits appear without rebuilding the image.
+services:
+  app:
+    volumes:
+      - ./institutional_streamlit_portfolio:/app:ro
+    environment:
+      STREAMLIT_SERVER_RUN_ON_SAVE: "true"
+      STREAMLIT_SERVER_FILE_WATCHER_TYPE: poll

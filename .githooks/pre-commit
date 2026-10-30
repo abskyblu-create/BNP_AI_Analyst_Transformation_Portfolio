@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+root=$(git rev-parse --show-toplevel)
+runner=$(git config --local --get hooks.publicationPython) || {
+    printf '%s\n' 'ERROR: enable publication safeguards in this clone before committing.' >&2
+    exit 1
+}
+exec "$runner" "$root/scripts/publication_guard.py" staged

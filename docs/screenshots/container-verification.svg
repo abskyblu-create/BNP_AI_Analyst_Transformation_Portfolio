@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="410" viewBox="0 0 1080 410" role="img" aria-labelledby="title description">
+  <title id="title">Verified Docker application runtime</title>
+  <desc id="description">Image institutional-vault-app:latest is running in a healthy container. The health endpoint returns HTTP 200 ok. Twenty-nine application tests and seventeen safeguard tests passed. Twenty-six reviewed runtime files are included. No host Python installation is required to run the container.</desc>
+  <rect width="1080" height="410" rx="14" fill="#0b2824"/>
+  <rect x="0" y="0" width="9" height="410" fill="#67d4ad"/>
+  <text x="38" y="47" fill="#67d4ad" font-family="Arial, sans-serif" font-size="16" font-weight="700">CONTAINER VERIFICATION</text>
+  <text x="38" y="86" fill="#ffffff" font-family="Arial, sans-serif" font-size="28" font-weight="700">Built, running and healthy</text>
+  <g font-family="Arial, sans-serif" font-size="20" fill="#eaf5f1">
+    <text x="38" y="133">Image</text><text x="310" y="133" font-weight="700">institutional-vault-app:latest</text>
+    <text x="38" y="172">Container status</text><text x="310" y="172" fill="#67d4ad" font-weight="700">healthy</text>
+    <text x="38" y="211">Local address</text><text x="310" y="211" fill="#7dd3fc" font-weight="700">http://localhost:8501</text>
+    <text x="38" y="250">Health endpoint</text><text x="310" y="250" font-weight="700">HTTP 200 — ok</text>
+    <text x="38" y="289">Verification</text><text x="310" y="289" font-weight="700">29 application tests · 17 safeguard tests passed</text>
+    <text x="38" y="328">Image contents</text><text x="310" y="328" font-weight="700">26 reviewed runtime files · non-root user</text>
+  </g>
+  <text x="38" y="381" fill="#b7d9cc" font-family="Arial, sans-serif" font-size="17">Docker runs Python inside the container. No host Python or virtual environment is needed to use the app.</text>
+</svg>

@@ -1,0 +1,46 @@
+stages:
+  - publication
+  - validate
+  - package
+
+publication:
+  stage: publication
+  image: python:3.11-slim
+  variables:
+    GIT_DEPTH: "0"
+  before_script:
+    - apt-get update && apt-get install -y --no-install-recommends git ca-certificates
+  script:
+    - python scripts/setup_safeguards.py
+    - python scripts/publication_guard.py ci
+    - python -m unittest discover -s scripts -p test_publication_guard.py -v
+
+validate:
+  stage: validate
+  image: python:3.11-slim
+  script:
+    - cd institutional_streamlit_portfolio
+    - python -m pip install --no-cache-dir -r requirements.txt
+    - python validate.py
+    - python -m unittest test_workflows.py -v
+
+# Requires a runner configured for TLS-enabled, privileged Docker-in-Docker.
+# Registry credentials below are GitLab-provided variables, not stored secrets.
+container:
+  stage: package
+  image: docker:29-cli
+  services:
+    - name: docker:29-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: /certs
+    DOCKER_TLS_VERIFY: "1"
+    DOCKER_CERT_PATH: /certs/client
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"

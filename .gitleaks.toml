@@ -1,0 +1,18 @@
+title = "Portfolio offline secret detection"
+
+[extend]
+useDefault = true
+
+# Project examples must not suppress findings through inline allow comments.
+# The guard also ignores repository .gitleaksignore files and scanner env config.
+[[rules]]
+id = "portfolio-credential-assignment"
+description = "Potential embedded credential assignment"
+regex = '''(?i)(?:password|passwd|api[_-]?key|access[_-]?token|client[_-]?secret)\s*[:=]\s*["']([a-z0-9_+/=.!@#$%^&*()-]{16,})["']'''
+secretGroup = 1
+entropy = 3.5
+
+[[rules]]
+id = "portfolio-private-key"
+description = "Private key header"
+regex = '''-----BEGIN (?:RSA |EC |OPENSSH |DSA |ENCRYPTED )?PRIVATE KEY-----'''

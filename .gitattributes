@@ -1,0 +1,11 @@
+* text=auto
+*.py text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+Dockerfile text eol=lf
+*.bat text eol=crlf
+*.webp binary
+*.png binary
+.githooks/* text eol=lf
+*.json text eol=lf
