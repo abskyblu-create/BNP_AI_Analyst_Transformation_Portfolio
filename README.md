@@ -12,7 +12,9 @@ This portfolio connects Ankit Bhatt's AI Analyst internship missions in Global F
 
 Explore **eight professional missions**, follow **one fictional fund through ten connected stages**, or inspect individual exercises across **14 pages**. Calculations include business definitions, worked explanations and downstream implications.
 
-**Status:** Docker image built and local container health-checked. Public hosting and a live portfolio URL have not been configured. Professional mission narratives and fictional demonstration results are identified separately.
+**[Open the live portfolio →](https://ankit-finance-data-ai.streamlit.app/)** · [Professional Knowledge and Contribution Guide](PROFESSIONAL_KNOWLEDGE_GUIDE.md)
+
+Hosted on Streamlit Community Cloud. Explore the application directly in your browser, or run it locally with Docker.
 
 **Run with Docker — no host Python or virtual environment required:** install Docker Desktop, start its Linux container engine, then run this command from the downloaded or cloned project folder:
 
@@ -22,7 +24,7 @@ docker compose up --build --detach --wait
 
 Open **http://localhost:8501**. Docker installs Python and the dependencies inside the image. For subsequent starts with an existing image, use `docker compose up --detach --wait`; rebuild after source or dependency changes.
 
-[Run the application](#installation-and-startup) · [Follow the guided case](#first-use-walkthrough) · [Hosting](#public-hosting-and-continuous-deployment) · [Professional Knowledge and Contribution Guide](PROFESSIONAL_KNOWLEDGE_GUIDE.md)
+[Run the application](#installation-and-startup) · [Follow the guided case](#first-use-walkthrough) · [Live application](#live-application-and-deployment) · [Professional Knowledge and Contribution Guide](PROFESSIONAL_KNOWLEDGE_GUIDE.md)
 
 ## Contents
 
@@ -38,10 +40,9 @@ Open **http://localhost:8501**. Docker installs Python and the dependencies insi
 10. [Configuration and presentation](#configuration-and-presentation)
 11. [Validation and testing](#validation-and-testing)
 12. [Containers and team development](#containers-and-team-development)
-13. [Public hosting and continuous deployment](#public-hosting-and-continuous-deployment)
-14. [Publication safeguards](#publication-safeguards)
-15. [Troubleshooting](#troubleshooting)
-16. [Scope, attribution and maintenance](#scope-attribution-and-maintenance)
+13. [Live application and deployment](#live-application-and-deployment)
+14. [Troubleshooting](#troubleshooting)
+15. [Scope, attribution and maintenance](#scope-attribution-and-maintenance)
 
 ## Purpose and contribution
 
@@ -91,7 +92,7 @@ flowchart TD
 
 The baseline reconstructs **EUR 475,000,000 of investments**, **EUR 474,993,493 of Net Asset Value (NAV)** and **EUR 118.7484 per unit**. Expected movements produce **EUR 20,551,700 projected cash**, tested against an illustrative **EUR 360,000 reserve**. Forecast cash supports liquidity planning; NAV retains the accounting cash balance.
 
-The interview guide distinguishes this **ten-stage educational case**, the **ten-stage operational NAV lifecycle**, and the **twelve-step technical valuation model**. They describe different levels of the process.
+The Professional Knowledge and Contribution Guide distinguishes this **ten-stage educational case**, the **ten-stage operational NAV lifecycle**, and the **twelve-step technical valuation model**. They describe different levels of the process.
 
 ## Application content and navigation
 
@@ -128,12 +129,12 @@ Result cards use blue emphasis; warnings and failed control outcomes use red. Re
 
 | Requirement | Purpose |
 | --- | --- |
-| Python 3.11 or newer | Native route only: recommended clean-install target. CI and the container also use Python 3.11 internally. |
+| Python 3.11 | Native route only: recommended clean-install target. CI and the container also use Python 3.11 internally. |
 | pip | Native route only: Python dependency installation. |
 | A modern browser | Local or hosted application access. |
-| Streamlit `>=1.64,<2.0` | Application framework and controls. |
-| pandas `>=2.2,<3.0` | Data structures and tables. |
-| Altair `>=5.5,<7.0` | Reporting and valuation charts. |
+| Streamlit `1.66.1` | Application framework and controls. |
+| pandas `2.3.3` | Data structures and tables. |
+| Altair `6.3.0` | Reporting and valuation charts. |
 | Git, optional for local use | Source versioning and publication to a connected host. |
 | Docker with Compose v2 | Docker route: Docker Desktop with Linux containers on Windows/macOS, or Docker Engine with Compose on Linux. |
 
@@ -157,15 +158,15 @@ docker compose ps
 4. Confirm the status is **healthy**, then open **http://localhost:8501**. The health URL is **http://localhost:8501/_stcore/health**, which should return `ok`.
 5. Stop the application with `docker compose down`. Detached containers continue running after the terminal closes; Docker itself must remain running.
 
-The first build downloads the base image and dependencies. Later starts reuse the local image. An image registry is not connected yet, so another machine must currently obtain this source and build it; `institutional-vault-app:latest` is not a published download.
+The first build downloads the base image and dependencies. Later starts reuse the local image. This route builds the application directly from the source on your computer.
 
 ### Optional: native Python installation
 
-The following alternatives require host Python. Start Streamlit from `institutional_streamlit_portfolio` so current relative assets and theme settings resolve correctly. Keep that terminal open; **Ctrl+C** stops its server. Docker users can skip these alternatives.
+The following alternatives require host Python. The commands start Streamlit from `institutional_streamlit_portfolio`. Keep that terminal open; **Ctrl+C** stops its server. Docker users can skip these alternatives.
 
 ### Windows launcher
 
-With a working Python 3.11+ installation:
+With a working Python 3.11 installation:
 
 ```powershell
 .\institutional_streamlit_portfolio\run_windows.bat
@@ -188,38 +189,20 @@ Set-Location institutional_streamlit_portfolio
 ..\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-Use `py -3.12` instead if that is your installed version. Environment activation is unnecessary when calling its interpreter directly.
+Python 3.11 matches the deployed application and Docker image. Environment activation is unnecessary when calling its interpreter directly.
 
 ### Linux or macOS
 
-Use an installed Python 3.11+ interpreter:
+Use an installed Python 3.11 interpreter:
 
 ```bash
-python3 -m venv .venv
+python3.11 -m venv .venv
 .venv/bin/python -m pip install -r institutional_streamlit_portfolio/requirements.txt
 cd institutional_streamlit_portfolio
 ../.venv/bin/python -m streamlit run app.py
 ```
 
 Open **http://localhost:8501** for a manual launch. If occupied, append `--server.port=8502`. Always use the address printed by the process you started.
-
-### Existing development workspace
-
-An ignored `.runtime_venv` also exists in the current workspace. If its interpreter works, run directly from the application directory:
-
-```powershell
-Set-Location institutional_streamlit_portfolio
-..\.runtime_venv\Scripts\python.exe -m streamlit run app.py
-```
-
-From the repository root, inspect it with:
-
-```powershell
-.\.runtime_venv\Scripts\python.exe --version
-.\.runtime_venv\Scripts\python.exe -m pip show streamlit pandas altair
-```
-
-The existing verification runtime reports Python **3.10.18**, Streamlit **1.64.0**, pandas **2.3.3** and Altair **6.2.2**. It runs the current checks but falls below the launcher's Python minimum. Use Python 3.11+ for fresh project installations; virtual environments are local dependencies and should not be copied between computers.
 
 ## First-use walkthrough
 
@@ -298,11 +281,6 @@ flowchart LR
 ├── PROFESSIONAL_KNOWLEDGE_GUIDE.md  # Knowledge synthesis and professional contribution
 ├── docs/screenshots/                 # Current interface illustration
 ├── .github/workflows/ci.yml          # Validation, container checks and image publication
-├── .gitlab-ci.yml                    # Alternative GitLab validation and packaging
-├── .publication-policy.json         # Exact reviewed public paths and asset hashes
-├── .gitleaks.toml                    # Offline secret rules extending Gitleaks defaults
-├── .githooks/                        # Clone-local pre-commit and pre-push checks
-├── scripts/                         # Safeguard setup, checks and synthetic tests
 ├── Dockerfile
 ├── compose.yaml
 ├── compose.dev.yaml
@@ -357,13 +335,9 @@ From the application directory, using a `.venv` at the repository root:
 ../.venv/bin/python -m unittest test_workflows.py -v
 ```
 
-In the current workspace, substitute `..\.runtime_venv\Scripts\python.exe` for the Windows interpreter above.
-
 Validation covers syntax, page registration, content and domain behaviour. Unittests cover calculations and Streamlit interactions, including the guided journey, correction/review invalidation, navigation and display settings. Successful commands end with **VALIDATION PASSED** and **OK**.
 
-**Verification:** structural validation and the **29-test suite** passed locally and in disposable containers using the built application image. The runtime-only image was built successfully, started through Compose and reported **healthy** under its non-root user. Both `/_stcore/health` and the homepage returned HTTP 200 from the host; the health response was `ok`. An exported build-context audit matched exactly **26 reviewed runtime files**, excluding nested environments and unreviewed local files. The container resolved Python 3.11 with Streamlit 1.66.1, pandas 2.3.3 and Altair 6.3.0 from the declared ranges. Production and development Compose syntax was also checked. Cloud deployment remains unconfigured. The screenshot illustrates a local browser session, not visual validation of every screen or dependency version.
-
-Before publishing visual changes, review all pages at small/large text sizes, narrow/wide viewports, keyboard focus, long cell values and warning states. Check that exports match the displayed run and external profile links reach their intended destination.
+**Validation:** the application suite contains **32 tests**, covering financial calculations, all registered pages, the guided case, exception visibility, correction handling, read-only controls and review invalidation. Structural validation also checks page registration and content. The Docker image has been built and health-checked; the repository includes **17 additional safeguard tests**.
 
 ## Containers and team development
 
@@ -384,7 +358,7 @@ Open **http://localhost:8501**. The image uses Python 3.11, a non-root user, por
 docker compose down
 ```
 
-The verified local image is `institutional-vault-app:latest`; Compose runs it as `institutional-vault-app-1`. Check its readiness with `docker compose ps` and visit `http://localhost:8501/_stcore/health`. This is a local service, not a public hosting address. The runtime image intentionally excludes tests and the Windows launcher; run the tests with the development mount, in CI, or by mounting only those reviewed files into a disposable container.
+The verified local image is `institutional-vault-app:latest`; Compose runs it as `institutional-vault-app-1`. Check its readiness with `docker compose ps` and visit `http://localhost:8501/_stcore/health`. The runtime image intentionally excludes tests and the Windows launcher; run the tests with the development mount, in CI, or by mounting only those reviewed files into a disposable container.
 
 For live local source edits:
 
@@ -401,174 +375,32 @@ docker compose -f compose.yaml -f compose.dev.yaml exec app python -m unittest t
 
 For a different port, set `$env:APP_PORT = '8502'` in PowerShell or `export APP_PORT=8502` in a POSIX shell before starting Compose.
 
-Repository owners manage collaborator access in GitHub or GitLab. Contributors should use feature branches, review their diff, validate/test and submit a pull or merge request. Keep reference documents and credentials outside publication allowlists. Protect the default branch with reviews and required checks where supported. Git history preserves reviewed source, not a visitor's live session.
+## Live application and deployment
 
-For a repository that already has a remote, a typical contribution starts with `git switch -c feature/describe-your-change`. After validation, stage the intended files, commit and push that branch, then open a pull request. The GitHub checks are named **Publication safeguards**, **Validate application** and **Build and smoke test container**. Private source and container access are controlled separately by repository and package permissions.
+**[Open Finance · Data · AI Portfolio](https://ankit-finance-data-ai.streamlit.app/)**
 
-## Public hosting and continuous deployment
-
-**No live portfolio URL is claimed.** The external personal website linked in the app is a separate destination.
-
-The proposed free route is GitHub source storage plus **Streamlit Community Cloud**, which runs dynamic Streamlit applications and provides a `streamlit.app` address. GitHub Pages and GitLab Pages serve static sites; this application requires a Python host. See [Community Cloud](https://docs.streamlit.io/deploy/streamlit-community-cloud).
+The application is hosted on **Streamlit Community Cloud**, connected to this repository's `main` branch. Source updates pushed to that branch are picked up by Streamlit automatically.
 
 ```mermaid
 flowchart LR
-    L[Reviewed local source] --> G[GitHub repository]
-    G --> CI[Existing CI: validate, test and package]
-    G -. Hosting connection not configured .-> H[Streamlit Community Cloud]
-    H --> U[Public HTTPS address]
+    G[GitHub main branch] --> H[Streamlit Community Cloud]
+    H --> U[Live portfolio]
     U --> V[Visitor browser]
+    G --> CI[Automated validation and container checks]
 ```
 
-Before deploying the current nested app:
-
-1. Review the publication files, create a repository and connect the source to it.
-2. Resolve root-directory paths for the logo and hero image, and verify theme loading. Community Cloud starts from the repository root; current local instructions start from the app subdirectory. Follow the [official file-organisation guidance](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/file-organization).
-3. Select the repository, branch `main` and `institutional_streamlit_portfolio/app.py` entry point in Community Cloud.
-4. Open **Advanced settings**, select Python 3.11 to match the tested container, and leave Secrets empty because this portfolio requires no credentials.
-5. Choose an available `streamlit.app` subdomain and deploy. Future pushes to `main` will update the hosted app automatically.
-4. Verify pages, images, exports and run controls in the hosted environment before sharing its URL.
-
-Once connected, pushes to the deployment branch update the app. CI alone does not establish that connection. Community Cloud has resource limits and sleeps after 12 hours without traffic; visitors can wake it. See [deployment](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy) and [management and limitations](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app).
-
-**GitHub workflow:** validates/tests, builds and health-checks a container, then publishes the tested default-branch image to `ghcr.io/<owner>/<repository>:<commit-sha>` and `:latest`. Only publication has package-write permission, using the automatic GitHub token. This delivers an image, not a deployed website.
-
-**GitLab workflow:** validates/tests and packages a default-branch image in GitLab Container Registry. Its container job requires a runner supporting privileged, TLS-enabled Docker-in-Docker with shared client certificates. Registry and runner configuration must exist. A container host must support the app's port, WebSockets and public HTTPS.
-
-Both CI definitions run **Publication safeguards** before application validation and packaging. They install the checksum-pinned scanner, check committed content and reachable history, and run the safeguard tests. CI operates after content has reached the remote; local hooks are the earlier control.
-
-For an empty repository created in the chosen provider, publication is a separate action. Review the intended files and Git author identity first:
-
-```bash
-git status
-git diff --cached --stat
-git remote -v
-```
-
-Then stage only the intended source and documentation, create the reviewed commit, connect the actual repository URL and push the current branch. For a repository without an existing `origin`:
-
-```bash
-git remote add origin <your-repository-url>
-git push -u origin HEAD
-```
-
-Replace the placeholder before executing. Authenticate through SSH or a credential manager; do not place tokens in a committed URL. These commands are instructions, not a record that publication or deployment has occurred.
-
-## Publication safeguards
-
-The exact public inventory is [`.publication-policy.json`](.publication-policy.json): application source, synthetic examples, two public guides, test/configuration files, CI definitions, safeguards and four reviewed visual assets. No document/image wildcard is used. [`.gitignore`](.gitignore) exposes only those paths; the guard independently rejects paths outside the inventory, even if force-added. [`.dockerignore`](.dockerignore) separately limits the container build context to runtime files.
-
-The policy also identifies required safeguard files. They must be present in the staged or committed snapshot, not merely exist as untracked files, so an initial publication cannot silently omit its protective scripts, hooks or CI checks.
-
-Private documents, original experience material, imported spreadsheets, real datasets, archives, exports, browser profiles, account configuration, environments, logs and credentials remain local. `.gitignore` does **not** remove content already in the index or history. Reviewed logo, hero and screenshot content is pinned by SHA-256; a changed or new asset requires visual review and a deliberate inventory update. Text secret detection cannot establish that an image is safe.
-
-### Enable safeguards in each clone
-
-Use the same working Python interpreter throughout. From the repository root on a fresh Windows setup:
-
-```powershell
-.\.venv\Scripts\python.exe scripts/setup_safeguards.py --enable-hooks
-```
-
-Linux/macOS:
-
-```bash
-.venv/bin/python scripts/setup_safeguards.py --enable-hooks
-```
-
-For this existing workspace, use `.\.runtime_venv\Scripts\python.exe` instead. Setup downloads **Gitleaks 8.30.1** from its [official release](https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1), checks a pinned archive SHA-256, and installs it in ignored `.tools/`. Internet access is needed for installation only. Scans operate locally, make no credential-verification requests and do not upload findings. The [upstream project](https://github.com/gitleaks/gitleaks) describes future Gitleaks releases as security patches; review and deliberately update the pinned release and checksums when appropriate.
-
-Setup configures only this clone's `core.hooksPath` and `hooks.publicationPython`; it does not change global Git settings. Check them with:
-
-```bash
-git config --local --get core.hooksPath
-git config --local --get hooks.publicationPython
-```
-
-Git safeguards are a contributor/publisher task, separate from running the application. Docker users do not need these setup commands or host Python. Ignored virtual environments such as `.runtime_venv` do not accompany a new clone.
-
-Hook activation has been verified in this development clone: `core.hooksPath` points to `.githooks`, and `hooks.publicationPython` points to its working interpreter. Other clones still require activation. For this existing workspace, run setup from your normal PowerShell terminal; the first command below avoids a relative-path `CommandNotFoundException`:
-
-```powershell
-Set-Location -LiteralPath 'C:\Users\Ankit\study\BNP_AI_Analyst_Transformation_Portfolio'
-.\.runtime_venv\Scripts\python.exe scripts/setup_safeguards.py --hooks-only
-```
-
-Confirm the two local settings above before relying on automatic hook protection.
-
-If hook activation fails, use `scripts/setup_safeguards.py --diagnose` with the same Python interpreter. This read-only check reports repository recognition, the presence of local configuration and any configuration lock. Setup distinguishes permission failures, existing locks, ownership checks and missing Git metadata; it never prints raw configuration or removes locks automatically. Running the application in Docker remains independent of hook activation.
-
-If Git reports an ownership mismatch for this reviewed project, run the following in your normal user PowerShell terminal before retrying hook setup:
-
-```powershell
-git config --global --add safe.directory 'C:/Users/Ankit/study/BNP_AI_Analyst_Transformation_Portfolio'
-```
-
-For another checkout, substitute its exact absolute path only after verifying the owner and contents. This creates a path-specific trust exception in your user Git configuration; it does not change ownership, credentials or scanner rules. See Git's [safe.directory documentation](https://git-scm.com/docs/git-config#Documentation/git-config.txt-safedirectory). No global trust setting is changed automatically by the setup script.
-
-If PowerShell still cannot locate that executable, check `Test-Path .\.runtime_venv\Scripts\python.exe`. A false result means this environment is absent from that checkout; use an existing installed Python, such as `py scripts/setup_safeguards.py --hooks-only`. The safeguard setup uses Python's standard library and needs no application-package installation. If the scanner is absent too, use `--enable-hooks` instead to install it and enable the hooks together.
-
-If the scanner is already installed, `scripts/setup_safeguards.py --hooks-only` enables the hooks without another download. A moved/removed interpreter requires rerunning setup with a working one. Cloning the files alone does not enable hooks. Inspect existing hooks before changing `core.hooksPath` in an established clone; integrate existing checks rather than silently replacing them.
-
-### Check before staging, committing or pushing
-
-Using the project environment's Python, these scopes have distinct meanings:
-
-```bash
-python scripts/publication_guard.py worktree
-python scripts/publication_guard.py staged
-python scripts/publication_guard.py head
-python scripts/publication_guard.py history
-python -m unittest discover -s scripts -p test_publication_guard.py -v
-```
-
-| Scope | Content checked |
+| Deployment setting | Value |
 | --- | --- |
-| `worktree` | Existing inventory files, existing indexed paths and visible untracked paths. Ignored private folders are not copied or scanned. |
-| `staged` | Full file content from the actual Git index, including partially staged files; not merely the working copy or added diff lines. |
-| `head` | The latest committed tree; unavailable before the first commit. |
-| `history` | Latest committed tree, path inventory across all reachable local commits, and Gitleaks scanning of their file-content history. Reports when no commits exist. |
-| `ci` | History checks with shallow checkouts rejected. CI uses complete checkouts. |
+| Platform | Streamlit Community Cloud |
+| Live URL | [ankit-finance-data-ai.streamlit.app](https://ankit-finance-data-ai.streamlit.app/) |
+| Repository | [abskyblu-create/BNP_AI_Analyst_Transformation_Portfolio](https://github.com/abskyblu-create/BNP_AI_Analyst_Transformation_Portfolio) |
+| Branch | `main` |
+| Entry point | `institutional_streamlit_portfolio/app.py` |
+| Python | 3.11 |
+| Dependencies | [requirements.txt](institutional_streamlit_portfolio/requirements.txt) |
+| API keys | None required |
 
-Missing/wrong-version scanners, invalid policies, unreadable content, missing reports or scanner errors **block** the check. Output contains filenames, line numbers and finding types, not candidate values or raw scanner logs. Reports and staging snapshots are temporary local files removed after scanning. Inline suppression comments and repository `.gitleaksignore` files cannot silence the guard.
-
-Local verification passed **17 safeguard tests**, including real hook execution in isolated synthetic repositories and the Docker directory-exclusion regression check, plus the **29 application tests**. All **48 intended working-tree files** passed the inventory and offline scanner. This does not mean the existing index is ready: its older logo, retired documentation and missing new safeguard files are deliberately blocked until the intended current files and deletions are staged. No commit, push or remote CI execution was performed by these checks.
-
-The pre-commit hook runs `staged`; pre-push runs `history`, conservatively checking all reachable local refs rather than only one outgoing branch. The hooks do not stage, commit, push, fetch or modify source files. New branches, tags or historical images can require an inventory review. Preserve previous reviewed asset hashes as a list when approving a replacement so valid historical versions remain recognised.
-
-For selected changes, stage explicit paths, for example:
-
-```bash
-git add -- README.md PROFESSIONAL_KNOWLEDGE_GUIDE.md
-git add -- .gitignore .gitattributes .gitleaks.toml .publication-policy.json
-git add -- .githooks/pre-commit .githooks/pre-push
-git add -- scripts/setup_safeguards.py scripts/publication_guard.py scripts/test_publication_guard.py
-git add -- .github/workflows/ci.yml .gitlab-ci.yml
-```
-
-For an initial publication of the complete reviewed app, inspect the inventory first. In PowerShell, the exact paths can be read from it rather than staging the entire working directory:
-
-```powershell
-$publicationFiles = (Get-Content -LiteralPath .publication-policy.json -Raw | ConvertFrom-Json).files
-$publicationFiles
-git add -- $publicationFiles
-```
-
-The initial workspace also has **retired documentation still in the index** from before consolidation. If those paths appear in the rejected inventory and remain intentionally deleted, stage only their deletions:
-
-```bash
-git add -u -- SETUP.md institutional_streamlit_portfolio/README.md
-```
-
-Staging the current reviewed logo replaces the previously staged older logo. Then rerun `staged`, inspect `git diff --cached --stat` and `git status --short`, and make the intended commit only when ready. Before a requested push, verify the destination and committed history; fetch/preserve remote changes and use a feature branch/PR where required. Do not force-push by default.
-
-### If sensitive content is detected
-
-Do not copy a candidate into issues, chat, logs or public reports. Identify it by filename, line and type, investigate locally, and move credentials to the host's environment/secret settings. The current app requires no credential file, so no live-secret template is supplied.
-
-If a private file is already tracked, review the exact path before using `git rm --cached -- <path>` to remove it from future commits while keeping the local copy, then add an appropriate ignore rule. This does not erase prior history. A credential committed or published previously needs revocation/rotation; removing the latest copy is insufficient. History rewriting, remote setting changes and force-pushing require a separate decision.
-
-**Limitations:** pattern scanners can miss secrets and produce false positives. They do not establish that prose contains no confidential information, inspect image pixels, validate credentials, or certify a project safe. The history scan concerns reachable file-content history, not every dangling object, commit message or annotated-tag message. Git hooks can be disabled or bypassed, and the local policy/code can be edited; remote CI and protected-branch rules provide additional controls. Do not publish raw reports or private inputs as CI artifacts. Maintain human review of exact paths, asset content and the push destination.
+Automated checks validate application behaviour, container health and repository safety as part of the development workflow.
 
 ## Troubleshooting
 
@@ -576,14 +408,13 @@ If a private file is already tracked, review the exact path before using `git rm
 | --- | --- |
 | Windows does not recognise `python` | Use `py -3.11` or a verified environment's `python.exe`. |
 | `No Python at ...` | The environment points to a missing installation. Create a new environment with a working interpreter; retain the source. |
-| Missing module or unsupported widget parameter | Install requirements with the same interpreter used to start the app; verify Streamlit is at least 1.64. |
-| Missing images or different theme | Start from the application directory; cloud startup needs the path preparation above. |
+| Missing module or unsupported widget parameter | Install the pinned requirements with the same interpreter used to start the app. |
+| Missing images or different theme | Confirm the application assets and `.streamlit/config.toml` are present in the checkout. |
 | Port 8501 occupied | Use the launcher's printed address or specify another port. Confirm the browser is not showing an older instance. |
 | Changes not visible | Confirm the local port or deployed version. Rerun Streamlit or enable rerun-on-save; a local edit is not a cloud deployment. |
 | Review/publication button disabled | Complete readiness, exception dispositions and current preparer/checker evidence; resolve open client queries. |
 | CSV rejected | Check the relevant encoding, headers, dates, field counts and tool-specific limits. |
 | Session reset | State is temporary. Prior downloads support review but cannot be imported as a restored session. |
-| LinkedIn requests login | LinkedIn controls its profile access; the app cannot override that requirement. |
 | Docker configuration or connection error | Start Docker Desktop with Linux containers and check user permissions. Valid Compose syntax does not prove a running container. |
 
 ## Scope, attribution and maintenance
@@ -592,7 +423,7 @@ This is an educational portfolio, with no live market feed, trading/payment conn
 
 The material is educational and does not provide investment, accounting, legal or regulatory advice.
 
-Professional narratives draw on supplied internship and experience material. Employer endorsement is not implied. Use non-confidential examples only. Git and Docker allowlists exclude local environments, caches, private references and secrets; ignored files already committed to history need separate review.
+Professional narratives draw on internship and experience material. Employer endorsement is not implied. Interactive exercises use fictional funds, figures and workflow actors; use non-confidential example data.
 
 This is the authoritative project README; the [Professional Knowledge and Contribution Guide](PROFESSIONAL_KNOWLEDGE_GUIDE.md) is the companion professional reference. Update both when calculations, interface labels or deployment status change. Review upgrades through tests and manual presentation checks. The project source is available under the [MIT License](LICENSE); third-party materials remain subject to their respective terms.
 
