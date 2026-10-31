@@ -143,6 +143,17 @@ Result cards use blue emphasis; warnings and failed control outcomes use red. Re
 
 Dependencies are declared in [requirements.txt](institutional_streamlit_portfolio/requirements.txt). Internet access is needed for package installation, external profile links and hosting setup. Current calculations, sample data, parsing and anomaly rules need **no API key, model download, paid service or financial-system account**.
 
+We used Altair to create the interactive charts inside the Streamlit application.
+
+The roles are different:
+pandas -> Organises and calculates the data
+Altair -> Turns that data into charts
+Streamlit -> Displays the charts alongside inputs, tables and workflow controls
+
+Altair lets us specify which data fields appear on each axis, how categories use colour, and what information appears when someone hovers over a chart. Streamlit displays those charts using st.altair_chart().
+
+This project’s shared readable_chart() helper in ui.py also adjusts chart labels, legends and titles according to the visitor’s selected text size.
+
 ## Installation and startup
 
 Initial commands assume a terminal at the **repository root**: the folder containing `Dockerfile` and `compose.yaml`.
