@@ -239,31 +239,6 @@ In **Data and Business Intelligence**, filter to one fund and read its event des
 
 In **Controlled Artificial Intelligence**, select a confirmation template and **Run controlled extraction**. Inspect completeness, missing fields, validation errors and mapped evidence. Change or omit a field and rerun to see the review route. This parser uses explicit rules; it does not call an LLM. Other tabs assess completion dates and split CSV data with a reconciliation manifest.
 
-## Inputs, exports and session behaviour
-
-| Feature | Input and constraints | Output |
-| --- | --- | --- |
-| Guided case | Prepared synthetic records; no financial entry. | Completed journey JSON. |
-| NAV workbench | Accounting, unit, flow and policy figures; editable holdings and fund/date context. | Draft valuation, cash forecast and control results. |
-| Journal exercise | Event, positive amount and reference. | Balanced session journal, separate from the NAV calculator. |
-| CSV consolidation | One or more CSVs; UTF-8 BOM, UTF-8, CP1252 and Latin-1 decoding attempts. Reserved lineage columns cannot be source fields. | Traceable master CSV and intake checks. |
-| Confirmation parser | Semicolon-separated `KEY=VALUE` fields; futures or FX-swap template. | Structured payload, evidence and review route. |
-| Completion-date batch | Seven-column CSV below; maximum **10 MB** and **10,000 rows**. | Assessed schedule CSV with source issues identified. |
-| CSV splitter | UTF-8 CSV, nonempty header, consistent field count; maximum **10 MB**. | ZIP of sequential parts plus manifest. |
-| Governance export | Current run, calculations, exceptions and review evidence. | JSON evidence package; no restore/import workflow. |
-
-The batch schedule template is downloadable in the app:
-
-```text
-Fund,Valuation frequency,Valuation date,Expected completion date,Actual or forecast completion date,Tolerance (calendar days),Schedule evidence reference
-```
-
-Dates use `YYYY-MM-DD`. Frequency is Daily, Weekly, Monthly or Quarterly; tolerance is a nonnegative whole number. The exercise uses supplied calendar dates rather than a complete business-day and intraday calendar engine.
-
-**Persistence:** edits, journals, approvals and preferences reside in temporary Streamlit session state. Navigation retains the current session, but new sessions, server restarts or disconnections may lose it. There is no database-backed save, backup or restore. Downloads support offline review; they do not restore the app. Changing the valuation fund/date reseeds that run. Restarting the guided journey clears its progress, and clearing the illustrative journal removes its session entries.
-
-CSV quoting and byte layout can be normalised during rewriting. Consolidation flags potential duplicates without automatically deleting repeated records. Use small non-confidential samples; wrapped reference tables are intended for review rather than large-scale data browsing.
-
 ## Architecture and project structure
 
 ```mermaid
