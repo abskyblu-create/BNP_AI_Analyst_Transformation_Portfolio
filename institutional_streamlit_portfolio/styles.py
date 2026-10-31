@@ -123,6 +123,21 @@ def apply_layout() -> None:
         max-height: none;
     }
     [data-testid="stMetric"] { height: 100%; }
+    /* Only the four descriptive cards in the ten-stage NAV control chain. */
+    .st-key-nav_control_chain_cards [data-testid="stMetricValue"],
+    .st-key-nav_control_chain_cards [data-testid="stMetricValue"] * {
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        text-overflow: clip !important;
+        overflow: visible !important;
+        height: auto !important;
+        max-height: none !important;
+        max-width: 100% !important;
+        -webkit-line-clamp: unset !important;
+    }
+    .st-key-nav_control_chain_cards [data-testid="stMetric"] {
+        height: auto !important;
+    }
     [class*="st-key-calculated_result_"] [data-testid="stMetric"] {
         background: #e0f2fe;
         border: 1px solid #60a5ce;

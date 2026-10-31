@@ -415,14 +415,15 @@ with foundation_tab:
     }
     selected_stage = st.selectbox("Inspect a control-chain stage", list(control_chain))
     owner, stage_input, control, output = control_chain[selected_stage]
-    metric_row(
-        [
-            ("Accountable function", owner, "Illustrative operating ownership"),
-            ("Required input", stage_input, "Information needed before the stage can run"),
-            ("Control", control, "Evidence or decision applied at the stage"),
-            ("Output", output, "Result passed to the next stage"),
-        ]
-    )
+    with st.container(key="nav_control_chain_cards"):
+        metric_row(
+            [
+                ("Accountable function", owner, "Illustrative operating ownership"),
+                ("Required input", stage_input, "Information needed before the stage can run"),
+                ("Control", control, "Evidence or decision applied at the stage"),
+                ("Output", output, "Result passed to the next stage"),
+            ]
+        )
     exception_type = st.segmented_control("Stage outcome", ["Clear", "Reviewable warning", "Blocking exception"], default="Clear")
     if exception_type == "Clear":
         st.success("The stage can pass its controlled output forward.")
