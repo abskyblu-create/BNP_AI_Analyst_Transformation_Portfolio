@@ -12,7 +12,9 @@ This portfolio connects Ankit Bhatt's AI Analyst internship missions in Global F
 
 Explore **eight professional missions**, follow **one fictional fund through ten connected stages**, or inspect individual exercises across **14 pages**. Calculations include business definitions, worked explanations and downstream implications.
 
-**[Open the live portfolio →](https://ankit-finance-data-ai.streamlit.app/)** · [Professional Knowledge and Contribution Guide](PROFESSIONAL_KNOWLEDGE_GUIDE.md) - https://ankit-finance-data-ai.streamlit.app/
+**[Open the live portfolio →](https://ankit-finance-data-ai.streamlit.app/)** · [Professional Knowledge and Contribution Guide](PROFESSIONAL_KNOWLEDGE_GUIDE.md) 
+
+**https://ankit-finance-data-ai.streamlit.app/**
 
 Hosted on Streamlit Community Cloud. Explore the application directly in your browser, or run it locally with Docker.
 
