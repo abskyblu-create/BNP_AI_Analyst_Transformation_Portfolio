@@ -195,7 +195,7 @@ These are **reported experience metrics**, not benchmarks independently reproduc
 
 Source: [`PROJECTS` and profile](institutional_streamlit_portfolio/data.py). Describe your internship contribution without claiming ownership of all production NAV operations or sole delivery.
 
-## Interview discussion points
+## Important points
 
 ### Why combine finance, data and AI?
 
