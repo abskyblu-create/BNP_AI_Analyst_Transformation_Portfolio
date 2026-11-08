@@ -42,18 +42,19 @@ st.caption(f"Showing {len(visible)} of {len(glossary)} terms.")
 if visible.empty:
     st.info("No term matches those filters. Try a shorter word or choose all areas.")
 else:
-    aligned_dataframe(
-        visible,
-        hide_index=True,
-        width="stretch",
-        height=min(620, 38 * len(visible) + 40),
-        column_config={
-            "Term": st.column_config.TextColumn(width="medium"),
-            "Short form": st.column_config.TextColumn(width="small"),
-            "Area": st.column_config.TextColumn(width="small"),
-            "Meaning": st.column_config.TextColumn(width="large"),
-        },
-    )
+    with st.container(key="glossary_table"):
+        aligned_dataframe(
+            visible,
+            hide_index=True,
+            width="stretch",
+            height=min(620, 38 * len(visible) + 40),
+            column_config={
+                "Term": st.column_config.TextColumn(width="medium"),
+                "Short form": st.column_config.TextColumn(width="small"),
+                "Area": st.column_config.TextColumn(width="small"),
+                "Meaning": st.column_config.TextColumn(width="large"),
+            },
+        )
 
 st.caption(
     "Terminology is selected from the supplied internship presentation and professional-experience report. "
@@ -64,5 +65,5 @@ with st.expander("About the examples"):
     st.markdown(
         "The mission descriptions summarize documented experience. Interactive funds, figures, controls and "
         "downloads are fictional learning examples. CAM always means Client Account Manager.",
-        text_alignment="justify",
+        text_alignment="left",
     )

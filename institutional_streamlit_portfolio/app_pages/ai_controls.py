@@ -168,7 +168,7 @@ with parser_tab:
         st.info("The template or source text changed. Run the extraction again to create a matching result.")
     if result:
         with st.expander("How the extraction works"):
-            st.markdown("1. Read only named fields from the source text.\n2. Map the fields using the selected product's rules.\n3. Check required values and dates.\n4. Show the output or explain why it needs review.", text_alignment="justify")
+            st.markdown("1. Read only named fields from the source text.\n2. Map the fields using the selected product's rules.\n3. Check required values and dates.\n4. Show the output or explain why it needs review.", text_alignment="left")
         metric_row(
             [
                 ("Field-completeness score", f"{result['confidence']:.1f}%", "Percentage of mandatory template fields found; it is not model confidence"),
@@ -193,7 +193,7 @@ with parser_tab:
 with calendar_tab:
     explain('calendar')
     st.subheader("Check a Net Asset Value completion date")
-    st.markdown("Select a valuation frequency, then compare the expected date with the actual or forecast date. The expected date must come from an approved fund schedule.", text_alignment="justify")
+    st.markdown("Select a valuation frequency, then compare the expected date with the actual or forecast date. The expected date must come from an approved fund schedule.", text_alignment="left")
     frequency = st.selectbox("Valuation frequency", ["Daily", "Weekly", "Monthly", "Quarterly"])
     schedule_guidance = {
         "Daily": "Source the expected date from the next valid fund business day after the valuation point.",
@@ -230,7 +230,7 @@ with calendar_tab:
     st.caption("A production checker would also apply the relevant business-day calendar, holidays, cut-off time and fund-specific exceptions.")
 
     with st.expander("Check several valuations from a CSV file"):
-        st.markdown("Upload a CSV schedule when you want to check several valuations at once. Each row must include its expected date and evidence reference.", text_alignment="justify")
+        st.markdown("Upload a CSV schedule when you want to check several valuations at once. Each row must include its expected date and evidence reference.", text_alignment="left")
         st.download_button(
             "Download example schedule manifest",
             SCHEDULE_EXAMPLE.encode("utf-8"),

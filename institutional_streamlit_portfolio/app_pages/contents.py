@@ -45,28 +45,31 @@ sections = [
     ]),
 ]
 
-st.markdown(
+with st.container(key="index_jump"):
+    st.markdown(
     "**Go to a section:** [Professional experience](#index-1) | [Worked examples](#index-2) | "
     "[Fund operations](#index-3) | [Data and delivery](#index-4) | [Reference](#index-5)"
-)
+    )
 with st.container(key="book_index"):
     for chapter, (title, pages) in enumerate(sections, 1):
-        st.subheader(f"{chapter:02d}  {title}", anchor=f"index-{chapter}")
-        for number, (label, page, description) in enumerate(pages, 1):
-            with st.container(key=f"index_entry_{page}"):
-                title_column, description_column = st.columns([2, 3], gap="medium")
-                with title_column:
-                    st.page_link(
-                        f"app_pages/{page}.py", label=f"{chapter}.{number}  {label}",
-                        disabled=page == "contents", width="stretch",
-                    )
-                with description_column:
-                    st.markdown(description)
+        with st.container(key=f"index_chapter_{chapter}"):
+            st.subheader(f"{chapter:02d}  {title}", anchor=f"index-{chapter}")
+            for number, (label, page, description) in enumerate(pages, 1):
+                with st.container(key=f"index_entry_{page}"):
+                    title_column, description_column = st.columns([2, 3], gap="medium", vertical_alignment="center")
+                    with title_column:
+                        st.page_link(
+                            f"app_pages/{page}.py", label=f"{chapter}.{number}  {label}",
+                            disabled=page == "contents", width="stretch",
+                        )
+                    with description_column:
+                        st.markdown(description)
 
 st.subheader("Connected navigation diagram")
 st.markdown("**Prefer a visual route:** select any page below. Each column offers a suggested sequence; enter or leave it at any point.")
 with st.container(key="navigation_diagram"):
-    st.page_link("app_pages/home.py", label="Overview", icon=":material/home:", width="stretch")
+    with st.container(key="diagram_start"):
+        st.page_link("app_pages/home.py", label="Overview", icon=":material/home:", width="stretch")
     st.markdown(":material/arrow_downward:", text_alignment="center")
     branches = [
         ("Understand the portfolio", [
@@ -87,18 +90,19 @@ with st.container(key="navigation_diagram"):
             ("Delivery and governance", "governance"),
         ], "Examine reporting, controlled processing and reviewed delivery."),
     ]
-    columns = st.columns(3, gap="medium")
-    for column, (title, nodes, description) in zip(columns, branches):
-        with column:
+    columns = st.columns(3, gap="medium", vertical_alignment="top")
+    for lane, (column, (title, nodes, description)) in enumerate(zip(columns, branches), 1):
+        with column, st.container(key=f"diagram_lane_{lane}", height="stretch"):
             st.markdown(f"**{title}**", text_alignment="center")
             for number, (label, page) in enumerate(nodes):
                 if number:
                     st.markdown(":material/arrow_downward:", text_alignment="center")
-                with st.container(border=True):
-                    st.page_link(f"app_pages/{page}.py", label=label, icon=":material/arrow_forward:", width="stretch")
-            st.caption(description)
+                st.page_link(f"app_pages/{page}.py", label=label, icon=":material/arrow_forward:", width="stretch")
+            with st.container(height="stretch"):
+                st.caption(description)
             st.markdown(":material/arrow_downward:", text_alignment="center")
-    st.page_link("app_pages/glossary.py", label="Glossary and methodology - available throughout", icon=":material/menu_book:", width="stretch")
+    with st.container(key="diagram_end"):
+        st.page_link("app_pages/glossary.py", label="Glossary and methodology - available throughout", icon=":material/menu_book:", width="stretch")
 st.caption(
     "The arrows indicate suggested navigation, not automatic data transfer. Within the operational workflow, "
     "accounting corrections return to valuation for recalculation before renewed review. "

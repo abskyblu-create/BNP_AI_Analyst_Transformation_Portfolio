@@ -10,10 +10,12 @@ from state import RUN_STAGES
 
 
 def page_header(section: str, title: str, description: str, icon: str) -> None:
-    st.caption(section)
-    st.title(title, icon=icon)
-    st.markdown(description, text_alignment="justify")
-    st.caption("Interactive example · fictional operating data")
+    # Each page opens on a dark chapter, matching the Overview hero.
+    with st.container(key="chapter_dark_page_header"):
+        st.caption(section)
+        st.title(title, icon=icon)
+        st.markdown(description)
+        st.caption("Interactive example · fictional operating data")
 
 
 def result_metric(label: str, value, *, help: str | None = None, border: bool = True, alert: bool = False):
@@ -34,7 +36,7 @@ def _control_cell_style(value) -> str:
     is_failure = value is False or (type(value).__name__ == "bool_" and not value)
     if isinstance(value, str):
         is_failure = bool(re.search(r"\b(failed|blocked|blocking|warning|late|rejected|not met|below policy buffer|projected overdraft|mismatch|breach|stale|open|under investigation|awaiting verification|escalated)\b", value, re.I))
-    return "background-color: #fee2e2; color: #991b1b; font-weight: 700" if is_failure else ""
+    return "background-color: #FDE4E5; color: #9F1F26; font-weight: 700" if is_failure else ""
 
 
 def metric_row(items: list[tuple[str, str, str]]) -> None:
@@ -109,13 +111,16 @@ def aligned_dataframe(data, **options):
         "Break ID", "Amount under investigation (EUR)", "Impact (basis points)",
     }]
     if "Workflow status" in frame and exception_columns:
-        for row_index in frame.index:
-            if frame.loc[row_index, "Workflow status"] not in {"Resolved", "Accepted within policy tolerance"}:
-                styled = styled.set_properties(subset=pd.IndexSlice[[row_index], exception_columns],
-                    **{"background-color": "#fee2e2", "color": "#991b1b", "font-weight": "700"})
+        open_rows = ~frame["Workflow status"].isin({"Resolved", "Accepted within policy tolerance"})
+        highlight = "background-color: #FDE4E5; color: #9F1F26; font-weight: 700"
+        # One vectorised pass instead of one Styler call per row.
+        styled = styled.apply(
+            lambda column: [highlight if is_open else "" for is_open in open_rows.loc[column.index]],
+            subset=exception_columns,
+        )
     for name in visible:
         if any(term in str(name).lower() for term in ("difference", "variance", "mismatch")) and pd.api.types.is_numeric_dtype(frame[name]):
-            styled = styled.map(lambda value: "background-color: #fee2e2; color: #991b1b; font-weight: 700" if pd.notna(value) and abs(value) > 0.005 else "", subset=[name])
+            styled = styled.map(lambda value: "background-color: #FDE4E5; color: #9F1F26; font-weight: 700" if pd.notna(value) and abs(value) > 0.005 else "", subset=[name])
     if labels:
         styled = styled.relabel_index([labels.get(name, name) for name in visible], axis="columns")
     return st.table(styled, hide_index=options.get("hide_index", True), width="stretch")
@@ -142,7 +147,10 @@ def readable_chart(chart, **options):
         .configure_legend(labelFontSize=round(16 * scale), titleFontSize=round(18 * scale))
         .configure_title(fontSize=round(20 * scale))
     )
-    return st.altair_chart(chart, **options)
+    # The chart definitions are fixed in code, so full schema validation on every rerun is
+    # pure overhead (it dominated chart cost). Render the same spec without re-validating.
+    spec = chart.to_dict(validate=False)
+    return st.vega_lite_chart(spec=spec, **options)
 
 
 def run_stage_bar() -> None:
@@ -178,3 +186,84 @@ def status_badge(status: str) -> None:
 
 def money(value: float, currency: str = "EUR", decimals: int = 2) -> str:
     return f"{currency} {value:,.{decimals}f}"
+
+
+def method_flow(steps: list[tuple[str, str]]) -> None:
+    """Render an ordered method as connected numbered steps (static HTML, no script)."""
+    from html import escape
+
+    items = "".join(
+        f'<li class="mf-step" style="--i:{index}"><span class="mf-node">{index + 1:02d}</span>'
+        f'<span class="mf-text"><strong>{escape(verb)}</strong>{(" " + escape(rest)) if rest else ""}</span></li>'
+        for index, (verb, rest) in enumerate(steps)
+    )
+    st.html(f'<ol class="mf" style="--n:{len(steps)}" aria-label="Method steps">{items}</ol>' + _METHOD_FLOW_CSS)
+
+
+_METHOD_FLOW_CSS = """
+<style>
+.mf {
+    --mf-green: #0B7A5C; --mf-bright: #12B886; --mf-blue: #2F5BFF;
+    list-style: none; margin: 0; padding: 0.4rem 0 0;
+    display: grid; grid-template-columns: repeat(var(--n, 6), minmax(0, 1fr)); gap: 0.5rem;
+    position: relative;
+}
+.mf::before {
+    content: ""; position: absolute; left: 4%; right: 4%; top: 1.95rem; height: 2px;
+    background: #D6E8E0; border-radius: 2px;
+}
+.mf::after {
+    content: ""; position: absolute; left: 4%; right: 4%; top: 1.95rem; height: 2px;
+    background: linear-gradient(90deg, var(--mf-bright), var(--mf-green) 60%, var(--mf-blue));
+    border-radius: 2px; transform-origin: left; transform: scaleX(0);
+    animation: mf-draw 1600ms cubic-bezier(0.22, 1, 0.36, 1) 300ms forwards;
+}
+.mf-step {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.75rem;
+    padding: 0 0.2rem;
+    animation: mf-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(250ms + var(--i) * 140ms);
+}
+.mf-node {
+    width: 3.9rem; height: 3.9rem; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: "Bricolage Grotesque", "IBM Plex Sans", sans-serif;
+    font-weight: 700; font-size: 1.05rem; letter-spacing: 0.02em; color: var(--mf-green);
+    background: #FFFFFF;
+    border: 2px solid #CBE6DA;
+    box-shadow: 0 0 0 6px #EEF5F2, 0 10px 24px -12px rgb(8 23 26 / 35%);
+    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), background-color 220ms ease,
+                color 220ms ease, border-color 220ms ease, box-shadow 260ms ease;
+}
+.mf-step:hover .mf-node {
+    transform: translateY(-4px) scale(1.06);
+    background: var(--mf-green); color: #FFFFFF; border-color: var(--mf-green);
+    box-shadow: 0 0 0 6px #EEF5F2, 0 16px 30px -12px rgb(11 122 92 / 55%);
+}
+.mf-step:last-child .mf-node { background: var(--mf-green); color: #FFFFFF; border-color: var(--mf-green); }
+.mf-text {
+    font-family: "IBM Plex Sans", sans-serif; font-size: 0.92rem; line-height: 1.4; color: #4A5B6E;
+    overflow-wrap: normal; word-break: normal;
+}
+.mf-text strong {
+    display: block;
+    font-family: "Bricolage Grotesque", "IBM Plex Sans", sans-serif;
+    font-size: clamp(0.98rem, 1.15vw, 1.15rem); font-weight: 700; letter-spacing: -0.015em; color: #0E1A2B;
+    margin-bottom: 0.15rem;
+}
+@keyframes mf-draw { to { transform: scaleX(1); } }
+@keyframes mf-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (max-width: 1100px) {
+    .mf { grid-template-columns: 1fr; gap: 0.6rem; }
+    .mf::before, .mf::after { left: 1.95rem; right: auto; top: 1rem; bottom: 1rem; width: 2px; height: auto; }
+    .mf::after { transform-origin: top; transform: scaleY(0); animation-name: mf-draw-v; }
+    .mf-step { flex-direction: row; text-align: left; gap: 1rem; }
+    @keyframes mf-draw-v { to { transform: scaleY(1); } }
+}
+@media (prefers-reduced-motion: reduce) {
+    .mf::after { animation: none; transform: none; }
+    .mf-step { animation: none; }
+}
+</style>
+"""

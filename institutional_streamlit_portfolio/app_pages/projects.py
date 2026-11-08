@@ -72,13 +72,13 @@ else:
         st.caption(f"{project['id']} · {project['pillar']}")
         st.header(project["title"])
         st.markdown(f":green-badge[{project['metric']}]")
-        st.markdown(f"**Why this mission existed:** {project['challenge']}", text_alignment="justify")
-        st.markdown(f"**Contribution:** {project['objective']}", text_alignment="justify")
-        st.markdown(f"**What it produced:** {project['evidence'][0]}", text_alignment="justify")
+        st.markdown(f"**Why this mission existed:** {project['challenge']}", text_alignment="left")
+        st.markdown(f"**Contribution:** {project['objective']}", text_alignment="left")
+        st.markdown(f"**What it produced:** {project['evidence'][0]}", text_alignment="left")
         with st.container(horizontal=True):
             st.badge("Documented experience", color="green", icon=":material/work_history:")
             if any("prompt" in tool.casefold() or "language model" in tool.casefold() for tool in project["tools"]):
-                st.badge("Prompt engineering", color="violet", icon=":material/memory:")
+                st.badge("AI engineering", color="violet", icon=":material/memory:")
 
     st.subheader("Explore the method, decisions and evidence")
     with st.container():
@@ -88,17 +88,17 @@ else:
         )
         with pipeline_tab:
             for index, step in enumerate(project["pipeline"], start=1):
-                st.markdown(f"{index}. {step}", text_alignment="justify")
+                st.markdown(f"{index}. {step}", text_alignment="left")
         with decisions_tab:
             for decision in project["decisions"]:
-                st.markdown(f"- {decision}", text_alignment="justify")
+                st.markdown(f"- {decision}", text_alignment="left")
         with controls_tab:
             for control in project["controls"]:
-                st.markdown(f"- {control}", text_alignment="justify")
+                st.markdown(f"- {control}", text_alignment="left")
         with evidence_tab:
             for item in project["evidence"]:
-                st.markdown(f"- {item}", text_alignment="justify")
-            st.caption(f"Key learning: {project['learning']}", text_alignment="justify")
+                st.markdown(f"- {item}", text_alignment="left")
+            st.caption(f"Key learning: {project['learning']}", text_alignment="left")
 
 st.subheader("Optional: try the ideas yourself")
 st.caption("The mission explanation is complete on this page. Open the interactive lab only if you want to test the mechanics with fictional data.")
@@ -119,7 +119,7 @@ with st.expander("See the mission-to-lab map"):
     aligned_dataframe(connections, hide_index=True, width="stretch")
 
 st.header("Optional: try a delivery decision")
-st.markdown("Choose a mission, record an owner and evidence, then see whether it can move to the next stage.", text_alignment="justify")
+st.markdown("Choose a mission, record an owner and evidence, then see whether it can move to the next stage.", text_alignment="left")
 st.caption("This editable register is fictional and stays in your browser session.")
 
 with st.expander("Open the delivery simulator"):

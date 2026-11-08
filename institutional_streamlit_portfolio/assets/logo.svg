@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 80" role="img" aria-labelledby="title desc">
   <title id="title">Ankit Bhatt portfolio</title>
   <desc id="desc">Institutional finance building mark beside Ankit Bhatt's name.</desc>
-  <rect width="260" height="80" rx="10" fill="#0b2824"/>
-  <g fill="none" stroke="#67d4ad" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="260" height="80" rx="10" fill="#0B201C"/>
+  <g fill="none" stroke="#5FD3A8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
     <path d="M12 32L38 14l26 18"/>
     <path d="M17 34h42M20 34v27M32 34v27M44 34v27M56 34v27M14 63h48"/>
   </g>
   <text x="78" y="35" fill="#ffffff" font-family="Arial, sans-serif" font-size="24" font-weight="700">ANKIT BHATT</text>
-  <text x="78" y="57" fill="#67d4ad" font-family="Arial, sans-serif" font-size="14" font-weight="600">FINANCE · DATA · AI</text>
+  <text x="78" y="57" fill="#5FD3A8" font-family="Arial, sans-serif" font-size="14" font-weight="600">FINANCE · DATA · AI</text>
 </svg>

@@ -11,6 +11,7 @@ from state import RUN_STAGES, begin_new_run, initialize_session, log_event
 
 
 APP_DIR = Path(__file__).resolve().parent
+DISCLAIMER = "Independent study project. Not affiliated with or endorsed by BNP Paribas."
 ASSET_DIR = APP_DIR / "assets"
 
 
@@ -70,14 +71,14 @@ acknowledged = bool(st.session_state.get("portfolio_acknowledgement"))
 page = st.navigation(pages, position="hidden")
 
 if not acknowledged:
-    st.caption("ANKIT BHATT  /  PROFESSIONAL PORTFOLIO")
+    st.caption("ANKIT BHATT - PROFESSIONAL PORTFOLIO")
     st.title("Before you explore", icon=":material/fact_check:")
     st.markdown(
         "This site presents documented professional missions and educational examples of "
         "fund administration, data and transformation. Please confirm the scope below.",
-        text_alignment="justify",
+        text_alignment="left",
     )
-    with st.container(border=True):
+    with st.container(border=True, key="gate_card"):
         st.markdown("**Portfolio use acknowledgement**")
         st.markdown(
             "- Mission descriptions reflect the supplied portfolio and experience documents. "
@@ -104,6 +105,7 @@ if not acknowledged:
             )
             st.rerun()
     st.caption("This browser-session acknowledgement records the scope notice. It is not identity verification or a legal signature.")
+    st.caption(DISCLAIMER)
     st.stop()
 
 run_workspace = page.title in {
@@ -192,4 +194,6 @@ if run_workspace:
 
 page.run()
 
-st.caption("Professional transformation portfolio · Synthetic operational workbenches · No live connectivity, certification or regulatory attestation")
+with st.container(key="site_footer"):
+    st.caption("Professional transformation portfolio · Synthetic operational workbenches · No live connectivity, certification or regulatory attestation")
+    st.caption(DISCLAIMER)

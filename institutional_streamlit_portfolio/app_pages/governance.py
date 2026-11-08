@@ -132,7 +132,7 @@ with review_tab:
 with client_tab:
     explain('delivery')
     st.subheader("Compare submission and distribution timing")
-    st.markdown("Change the four times to see whether a client submission or later price distribution misses its cut-off. They are separate delivery steps.", text_alignment="justify")
+    st.markdown("Change the four times to see whether a client submission or later price distribution misses its cut-off. They are separate delivery steps.", text_alignment="left")
     valuation_date = st.session_state.context["valuation_date"]
     c1, c2, c3, c4 = st.columns(4)
     submission_cutoff = c1.time_input("Client submission cut-off", value=datetime.strptime("17:00", "%H:%M").time())
@@ -244,7 +244,7 @@ with distribution_tab:
 with resilience_tab:
     explain('resilience')
     st.subheader("Business continuity exercise")
-    st.markdown("Change the workload and recovery capacity to see how quickly an illustrative backlog can be cleared after a disruption.", text_alignment="justify")
+    st.markdown("Change the workload and recovery capacity to see how quickly an illustrative backlog can be cleared after a disruption.", text_alignment="left")
     a, b, c = st.columns(3)
     daily_volume = a.number_input("Critical daily work items", min_value=1, value=1_000, step=100)
     outage_days = b.number_input("Disruption duration (days)", min_value=1, value=5, step=1)

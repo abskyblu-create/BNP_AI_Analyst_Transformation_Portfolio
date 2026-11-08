@@ -25,7 +25,7 @@ with st.expander("See review status"):
 if st.session_state.get("recon_notice"):
     st.success(st.session_state.pop("recon_notice"))
 
-st.markdown("**Reconciliation procedure:** Select a difference, compare the three source records and record a verified reason and action.", text_alignment="justify")
+st.markdown("**Reconciliation procedure:** Select a difference, compare the three source records and record a verified reason and action.", text_alignment="left")
 st.caption("This example compares fund accounting, custodian and investment-manager records. Real source choices depend on the control.")
 
 st.subheader("Exception overview across all funds")
@@ -116,8 +116,8 @@ if rows:
             source_df["Difference from fund accounting"] = amounts - amounts.iloc[0]
             styled_sources = source_df.style.format({source_df.columns[1]: "{:,.2f}", "Difference from fund accounting": "{:+,.2f}"})
             styled_sources = styled_sources.set_properties(subset=[source_df.columns[1]],
-                **{"color": "#991b1b", "background-color": "#fee2e2", "font-weight": "700", "text-align": "center"})
-            styled_sources = styled_sources.map(lambda value: "color: #991b1b; background-color: #fee2e2; font-weight: 700" if abs(value) > 0.005 else "", subset=["Difference from fund accounting"])
+                **{"color": "#9F1F26", "background-color": "#FDE4E5", "font-weight": "700", "text-align": "center"})
+            styled_sources = styled_sources.map(lambda value: "color: #9F1F26; background-color: #FDE4E5; font-weight: 700" if abs(value) > 0.005 else "", subset=["Difference from fund accounting"])
             st.table(styled_sources, hide_index=True)
             st.error(f"Source amounts disagree. Maximum source spread: {item['Source currency']} {amounts.max() - amounts.min():,.2f}. Confirm the authoritative record before resolving.")
         else:
@@ -132,7 +132,7 @@ if rows:
             })
             date_style = date_evidence.style.set_properties(
                 subset=["Illustrative settlement date", "Control result"],
-                **{"color": "#991b1b", "background-color": "#fee2e2", "font-weight": "700", "text-align": "center"})
+                **{"color": "#9F1F26", "background-color": "#FDE4E5", "font-weight": "700", "text-align": "center"})
             st.table(date_style, hide_index=True)
             st.error("Settlement-date exception: the custodian confirmation is one day later. The three EUR 1,450,000 amounts agree; EUR 1,450,000 is the transaction under investigation, not a monetary shortfall.")
             st.markdown("**Required investigation:** verify the contractual settlement date against the executed trade and confirmation, obtain a corrected record from the responsible source, and record the evidence. An accounting amount correction is not required solely because dates differ.")

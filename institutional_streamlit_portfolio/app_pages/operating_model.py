@@ -31,7 +31,7 @@ with st.container(border=True):
     local_required = c3.checkbox("A local rule requires a dedicated process", value=False)
     route = operating_model_route(common_ready, local_required, product_standard)
     result_metric("Recommended route", route["model"], border=True)
-    st.markdown(route["reason"], text_alignment="justify")
+    st.markdown(route["reason"], text_alignment="left")
     st.caption(f"Next check: {route['next_control']}")
 
 with st.expander("Compare the operating models"):
@@ -40,9 +40,9 @@ with st.expander("Compare the operating models"):
     for container, (name, details) in zip((left, right), OPERATING_MODELS.items()):
         with container, st.container(border=True):
             st.subheader(name)
-            st.markdown(details["definition"], text_alignment="justify")
-            st.markdown(f"**Best fit:** {details['best_for']}", text_alignment="justify")
-            st.markdown(f"**Control owner:** {details['ownership']}", text_alignment="justify")
+            st.markdown(details["definition"], text_alignment="left")
+            st.markdown(f"**Best fit:** {details['best_for']}", text_alignment="left")
+            st.markdown(f"**Control owner:** {details['ownership']}", text_alignment="left")
             st.caption(f"Strength: {details['strength']}")
             st.caption(f"Watch for: {details['watch']}")
 
