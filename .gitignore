@@ -1,5 +1,7 @@
 # Default deny: only exact reviewed publication paths are visible to Git.
 /*
+!/.devcontainer/
+/.devcontainer/*
 !/.githooks/
 /.githooks/*
 !/.github/
@@ -103,3 +105,4 @@
 **/.venv/
 **/.runtime_venv/
 **/.tools/
+!/.devcontainer/devcontainer.json
