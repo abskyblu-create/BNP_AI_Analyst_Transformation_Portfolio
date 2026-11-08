@@ -11,7 +11,7 @@ from state import RUN_STAGES, begin_new_run, initialize_session, log_event
 
 
 APP_DIR = Path(__file__).resolve().parent
-DISCLAIMER = "Independent study project. Not affiliated with or endorsed by BNP Paribas."
+DISCLAIMER = "Independent study project. Not affiliated with or endorsed by any financial institution."
 ASSET_DIR = APP_DIR / "assets"
 
 
