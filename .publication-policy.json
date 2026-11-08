@@ -50,13 +50,38 @@
     "institutional_streamlit_portfolio/valuation.py",
     "scripts/publication_guard.py",
     "scripts/setup_safeguards.py",
-    "scripts/test_publication_guard.py"
+    "scripts/test_publication_guard.py",
+    "institutional_streamlit_portfolio/hero.py",
+    "institutional_streamlit_portfolio/static/portfolio_hero.webp",
+    "institutional_streamlit_portfolio/static/fonts/OFL-BricolageGrotesque.txt",
+    "institutional_streamlit_portfolio/static/fonts/OFL-IBMPlex.txt",
+    "institutional_streamlit_portfolio/static/fonts/bricolage-grotesque-600.woff2",
+    "institutional_streamlit_portfolio/static/fonts/bricolage-grotesque-700.woff2",
+    "institutional_streamlit_portfolio/static/fonts/bricolage-grotesque-800.woff2",
+    "institutional_streamlit_portfolio/static/fonts/ibm-plex-sans-400-italic.woff2",
+    "institutional_streamlit_portfolio/static/fonts/ibm-plex-sans-400.woff2",
+    "institutional_streamlit_portfolio/static/fonts/ibm-plex-sans-500.woff2",
+    "institutional_streamlit_portfolio/static/fonts/ibm-plex-sans-600.woff2",
+    "institutional_streamlit_portfolio/static/fonts/ibm-plex-sans-700.woff2"
   ],
   "reviewed_assets": {
     "docs/screenshots/portfolio-overview.png": "f34f6df9888aec5955838c1b8eac4e12d77ea30cc93f9f56cd59f35c6ac38d87",
     "institutional_streamlit_portfolio/assets/portfolio_hero.webp": "730a34d3e41cb22db9857d21d16936807f33b2138eede178367b61555ef29cb2",
-    "institutional_streamlit_portfolio/assets/logo.svg": "c0ba50fd983a5cdf7ac1bd04034921f2929e51f0468f22f0a8795127211813bc",
-    "docs/screenshots/container-verification.svg": "30fb5b8264f8ecde56291f0149fb4d34e11e7e7e45247f693156f85ed4a2b472"
+    "institutional_streamlit_portfolio/assets/logo.svg": [
+      "3298fb58ae8792cff2ebc15e40f6615bda77e6c38bd11b7f706f7402fb357cde",
+      "82e0751f3f1d69549d0a118cd4826cd342cf82d1ab4076d9d93d808e25ef3af5",
+      "c0ba50fd983a5cdf7ac1bd04034921f2929e51f0468f22f0a8795127211813bc"
+    ],
+    "docs/screenshots/container-verification.svg": "30fb5b8264f8ecde56291f0149fb4d34e11e7e7e45247f693156f85ed4a2b472",
+    "institutional_streamlit_portfolio/static/portfolio_hero.webp": "c6813a64b163696fdb35850bb852e564c0fe466592675dd5e015f0eca597c1dc",
+    "institutional_streamlit_portfolio/static/fonts/bricolage-grotesque-600.woff2": "b34fc8c1ef0ac8798455ac2979eae4b4f90f0d327e3584d1032fa77a8a9a66ca",
+    "institutional_streamlit_portfolio/static/fonts/bricolage-grotesque-700.woff2": "4c373ce3c1cca41c864eb3e27c059a59fc6310547ab9c9b6cd780d387ba24206",
+    "institutional_streamlit_portfolio/static/fonts/bricolage-grotesque-800.woff2": "3e1b5f0a56ee995b7c1445bc54e6ec98c5dffb585ef5c4baf86731cf68e27c61",
+    "institutional_streamlit_portfolio/static/fonts/ibm-plex-sans-400-italic.woff2": "6de912e531b6c98084f1b2d5e5a91bad77be4e68bc4e396e43c46fc435e5f3d9",
+    "institutional_streamlit_portfolio/static/fonts/ibm-plex-sans-400.woff2": "3b646991d30055a93a4ecc499713d4347953a74a947ecab435ab72070cbdab0e",
+    "institutional_streamlit_portfolio/static/fonts/ibm-plex-sans-500.woff2": "0717336fb31fcdcde4b8deb3675bb4a0f7f6d484864afcd6751ac29975962203",
+    "institutional_streamlit_portfolio/static/fonts/ibm-plex-sans-600.woff2": "8960851d691c054ed38e259bdcf1a6190d157b4203ed5bb32c632a863fb8ec2f",
+    "institutional_streamlit_portfolio/static/fonts/ibm-plex-sans-700.woff2": "42e7b0c143c19df9d99fd896e76b48f846edf0902d200bc29796b34d12c33aa7"
   },
   "required_files": [
     ".publication-policy.json",

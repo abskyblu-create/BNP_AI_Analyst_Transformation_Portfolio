@@ -64,7 +64,7 @@ flowchart LR
 | --- | --- |
 | Data engineering and transformation | Structure source exports, preserve lineage and reconcile processing totals. |
 | Power BI and reconciliation analytics | Distinguish fund entities from operational events and define reporting measures. |
-| Prompt engineering and LLM automation | Bound the task, specify structured outputs and apply schedule-aware checks with review of exceptions. |
+| AI engineering and LLM automation | Bound the task, specify structured outputs and apply schedule-aware checks with review of exceptions. |
 | Python and GUI tool development | Translate repetitive operational requirements into usable processing tools. |
 | Financial process automation | Map confirmation fields and product rules into structured, reviewable outputs. |
 | AI governance and global stakeholder management | Clarify ownership, evidence, risk and decision criteria across business and technical stakeholders. |
@@ -105,7 +105,7 @@ The Professional Knowledge and Contribution Guide distinguishes this **ten-stage
 | --- | --- |
 | Overview | Professional context, contribution, capabilities and entry points. |
 | Contents & navigation | Complete index, topic descriptions and navigation diagram. |
-| How the work fits together | Fund Administration, NAV lifecycle, delivery, data modelling and prompt-engineering concepts. |
+| How the work fits together | Fund Administration, NAV lifecycle, delivery, data modelling and AI-engineering concepts. |
 | Missions | Eight workstreams, methods, decisions, controls, evidence and delivery simulators. |
 | Interactive lab | Entry points for the guided case and individual workbenches. |
 | Guided case | Ten sequential stages, carried evidence and a final JSON export. |

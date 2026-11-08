@@ -1186,7 +1186,7 @@ def _render_output(index: int, record: dict) -> None:
         )
         st.code(output["score_substitution"], language=None)
         st.markdown(f"**Rule result:** {output['anomaly']['score']:.1f} — {output['anomaly']['band']}")
-        st.markdown(f"**Confirmed cause:** {output['confirmed_cause']}", text_alignment="justify")
+        st.markdown(f"**Confirmed cause:** {output['confirmed_cause']}", text_alignment="left")
         aligned_dataframe(pd.DataFrame([output["resolution"]]), hide_index=True, width="stretch")
         (st.success if output["final_status"] == "Resolved for the guided case" else st.error)(
             f"{output['final_status']}. Outstanding events changed from {output['outstanding_before']} to {output['outstanding_after']}; the updated event population now feeds reporting."
@@ -1223,7 +1223,7 @@ def _render_output(index: int, record: dict) -> None:
             f"The net flow is {_money(output['net_flow'])}, or **{output['flow_percent']:.4f}%** of Net Asset Value. "
             f"It is below the illustrative **{output['illustrative_threshold_percent']:.2f}%** threshold, so the "
             f"**{output['illustrative_swing_factor_bps']} bps** teaching factor is not applied.",
-            text_alignment="justify",
+            text_alignment="left",
         )
         st.caption(
             f"The resolved EUR 1.45 million exposure equals {output['resolved_exposure_scale_bps']:.2f} bps of Net Asset Value as a scale reference; it was a settlement-date exception, not a booked valuation adjustment."
@@ -1287,7 +1287,7 @@ def _render_output(index: int, record: dict) -> None:
         with b:
             result_metric("Fund-price diffusion", output["market_diffusion"], border=True)
         aligned_dataframe(pd.DataFrame(output["distribution_channels"]), hide_index=True, width="stretch")
-        st.markdown(f"**Client Account Manager:** {output['cam_role']}", text_alignment="justify")
+        st.markdown(f"**Client Account Manager:** {output['cam_role']}", text_alignment="left")
         st.markdown("**Final acceptance-criteria status**")
         aligned_dataframe(pd.DataFrame(output["acceptance_results"]), hide_index=True, width="stretch")
         if output["delivery_ready"]:
@@ -1328,15 +1328,16 @@ _normalise_guided_state()
 completed = st.session_state.guided_pipeline_completed
 records = st.session_state.guided_pipeline_records
 
-st.caption("GUIDED LEARNING / FINANCE OPERATIONS → DATA → CONTROL → DELIVERY")
-st.title("One connected journey, one click at a time", icon=":material/route:")
-st.markdown(
-    "Follow one prepared fictional case from the business question to a reviewed and simulated delivery result. "
-    "Every click consumes the evidence created by the previous stages. You do not need to select a fund, move a "
-    "slider or enter a financial figure.",
-    text_alignment="justify",
-)
-st.caption("Professional methods and mission themes come from the supplied documents. All case names, figures, calculations and approvals are educational examples.")
+with st.container(key="chapter_dark_page_header"):
+    st.caption("GUIDED LEARNING / FINANCE OPERATIONS → DATA → CONTROL → DELIVERY")
+    st.title("One connected journey, one click at a time", icon=":material/route:")
+    st.markdown(
+        "Follow one prepared fictional case from the business question to a reviewed and simulated delivery result. "
+        "Every click consumes the evidence created by the previous stages. You do not need to select a fund, move a "
+        "slider or enter a financial figure.",
+        text_alignment="left",
+    )
+    st.caption("Professional methods and mission themes come from the supplied documents. All case names, figures, calculations and approvals are educational examples.")
 
 st.progress(completed / len(STEPS), text=f"{completed} of {len(STEPS)} stages complete")
 if completed:
@@ -1354,9 +1355,9 @@ for index, record in enumerate(records):
         icon=":material/check_circle:",
     ):
         step = STEPS[index]
-        st.markdown(f"**What happens:** {step['what']}", text_alignment="justify")
-        st.markdown(f"**Why it matters:** {step['why']}", text_alignment="justify")
-        st.markdown(f"**How it runs:** {step['how']}", text_alignment="justify")
+        st.markdown(f"**What happens:** {step['what']}", text_alignment="left")
+        st.markdown(f"**Why it matters:** {step['why']}", text_alignment="left")
+        st.markdown(f"**How it runs:** {step['how']}", text_alignment="left")
         st.markdown("**Rule or formula**")
         st.code(step["formula"], language=None)
         st.markdown("**Automated result**")
@@ -1368,7 +1369,7 @@ if completed < len(STEPS):
     with st.container(border=True):
         st.caption(f"NEXT AUTOMATED STAGE · {completed + 1:02d} OF {len(STEPS):02d}")
         st.subheader(next_step["title"])
-        st.markdown(next_step["what"], text_alignment="justify")
+        st.markdown(next_step["what"], text_alignment="left")
         if st.button(
             f"Run next stage · {completed + 1:02d}",
             type="primary",
@@ -1413,7 +1414,7 @@ with st.expander("Optional detailed demonstrations"):
     st.markdown(
         "The guided journey is the recommended route. Open a detailed workbench only when you want to inspect "
         "more controls after understanding the complete flow.",
-        text_alignment="justify",
+        text_alignment="left",
     )
     left, middle, right = st.columns(3)
     left.page_link("app_pages/nav_production.py", label="Net Asset Value calculation detail", icon=":material/calculate:")

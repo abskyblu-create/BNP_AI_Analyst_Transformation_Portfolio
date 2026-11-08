@@ -169,7 +169,7 @@ with kpi_tab:
 with pipeline_tab:
     explain('pipeline')
     st.subheader("Combine source exports")
-    st.markdown("Upload one or more CSV exports. The demo keeps each file and row reference so you can trace every output record back to its source.", text_alignment="justify")
+    st.markdown("Upload one or more CSV exports. The demo keeps each file and row reference so you can trace every output record back to its source.", text_alignment="left")
     with st.expander("How source row numbers work"):
         st.caption("Source row counts parsed CSV records, with the header as row 1. A quoted record may span physical lines.")
     uploads = st.file_uploader("Source files", type=["csv"], accept_multiple_files=True, key="source_pipeline_files")
@@ -239,7 +239,7 @@ with pipeline_tab:
 with model_tab:
     explain('model')
     st.subheader("One fund can have many events")
-    st.markdown("Choose a fund below to see how one fund record links to several reconciliation events. This is the reporting model behind the first tab.", text_alignment="justify")
+    st.markdown("Choose a fund below to see how one fund record links to several reconciliation events. This is the reporting model behind the first tab.", text_alignment="left")
     st.caption("Fund reference → unique fund dimension → repeated reconciliation events → management reporting view")
     dimensions = st.columns(4)
     for column, title, key, purpose in zip(
@@ -251,11 +251,11 @@ with model_tab:
         with column, st.container(border=True, height="stretch"):
             st.markdown(f"**{title}**")
             st.caption(f"Unique key: {key}")
-            st.markdown(purpose, text_alignment="justify")
+            st.markdown(purpose, text_alignment="left")
     st.markdown("**One-to-many filter direction ↓**")
     with st.container(border=True):
         st.subheader("Reconciliation event fact")
-        st.markdown("One row per observed event, with fund, date, client and location keys plus status, match method, ageing, timeliness and amount under investigation.", text_alignment="justify")
+        st.markdown("One row per observed event, with fund, date, client and location keys plus status, match method, ageing, timeliness and amount under investigation.", text_alignment="left")
     st.subheader("Inspect the fund-to-event relationship")
     st.caption("The four identifiers below are generated only for this synthetic demonstration. A production model must use a validated fund-master identifier.")
     aligned_dataframe(fund_dimension, hide_index=True, width="stretch")
@@ -289,7 +289,7 @@ with model_tab:
 with quality_tab:
     explain('missing')
     st.subheader("A missing value is different from zero")
-    st.markdown("Assess an incoming value and its proposed treatment. Zero is a measured value; blank means no value was supplied. Mixing them can make a false match.", text_alignment="justify")
+    st.markdown("Assess an incoming value and its proposed treatment. Zero is a measured value; blank means no value was supplied. Mixing them can make a false match.", text_alignment="left")
     sample = st.segmented_control("Incoming value", ["Blank / NULL", "Verified 0.00", "Invalid text", "Valid 125.40"], default="Blank / NULL")
     treatment = st.selectbox("Proposed transformation", ["Preserve missing value", "Convert to zero", "Reject or quarantine", "Parse as a number"])
     outcomes = {
@@ -332,7 +332,7 @@ with anomaly_tab:
                     ("Processing route", result["route"], "Valid data proceeds to business review"),
                 ]
             )
-            st.markdown("**Reasoning:** " + "; ".join(result["reasons"]), text_alignment="justify")
+            st.markdown("**Reasoning:** " + "; ".join(result["reasons"]), text_alignment="left")
     with st.expander("See how the score is calculated"):
         aligned_table(pd.DataFrame([
             ["Data-quality gate", "Required value missing or invalid date", "Do not score; quarantine"],

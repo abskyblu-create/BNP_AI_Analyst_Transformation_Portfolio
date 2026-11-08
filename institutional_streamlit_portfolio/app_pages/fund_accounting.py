@@ -47,16 +47,16 @@ with foundation:
         left, right = st.columns(2, gap="large")
         with left, st.container(border=True):
             st.subheader("Company accounting")
-            st.markdown("Measures a company's assets, liabilities, revenue and profit over reporting periods.", text_alignment="justify")
+            st.markdown("Measures a company's assets, liabilities, revenue and profit over reporting periods.", text_alignment="left")
         with right, st.container(border=True):
             st.subheader("Fund accounting")
-            st.markdown("Values an investor-owned pool at each valuation point, including investments, cash, income, expenses and units.", text_alignment="justify")
+            st.markdown("Values an investor-owned pool at each valuation point, including investments, cash, income, expenses and units.", text_alignment="left")
         st.caption("The general ledger (GL) holds the accounting entries behind these balances. Each journal's debits and credits must balance.")
 
 with journal:
     explain('journal')
     st.subheader("See how one event is recorded")
-    st.markdown("Choose an event and post it to this session's example ledger. It is separate from the NAV calculation.", text_alignment="justify")
+    st.markdown("Choose an event and post it to this session's example ledger. It is separate from the NAV calculation.", text_alignment="left")
     with st.form("journal_form"):
         transaction = st.selectbox("Accounting event", list(JOURNAL_TEMPLATES))
         amount = st.number_input("Amount (EUR)", min_value=0.01, value=100_000.0, step=10_000.0)

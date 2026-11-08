@@ -3,26 +3,33 @@ from __future__ import annotations
 import streamlit as st
 
 from data import NAV_FOUNDATION_STEPS
+from ui import method_flow
 
 
-st.caption("HOW THE WORK FITS TOGETHER")
-st.title("From a business process to a controlled solution", icon=":material/route:")
-st.markdown(
-    "The internship sat between Fund Administration operations and transformation: translating process risks "
-    "into data and control rules, engineering reporting or automation, testing results with users and maintaining "
-    "stakeholder alignment through delivery."
-)
+with st.container(key="chapter_dark_page_header"):
+    st.caption("HOW THE WORK FITS TOGETHER")
+    st.title("From a business process to a controlled solution", icon=":material/route:")
+    st.markdown(
+        "The internship sat between Fund Administration operations and transformation: translating process risks "
+        "into data and control rules, engineering reporting or automation, testing results with users and maintaining "
+        "stakeholder alignment through delivery."
+    )
 
 st.subheader("The complete story in one flow")
-st.markdown(
-    "**Understand the operation** → **find the control point** → **structure the data** → "
-    "**engineer the rule, model or prompt** → **validate against the source** → "
-    "**communicate the decision** → **hand over with evidence**"
-)
+with st.container(key="method_line_story"):
+    method_flow([
+        ("Understand the operation", ""),
+        ("find the control point", ""),
+        ("structure the data", ""),
+        ("engineer the rule, model or prompt", ""),
+        ("validate against the source", ""),
+        ("communicate the decision", ""),
+        ("hand over with evidence", ""),
+    ])
 
 concept = st.segmented_control(
     "Choose a concept",
-    ["Fund Administration", "NAV lifecycle", "Delivery", "Data & BI", "Prompt engineering"],
+    ["Fund Administration", "NAV lifecycle", "Delivery", "Data & BI", "AI engineering"],
     default="Fund Administration",
     selection_mode="single",
     width="stretch",
@@ -71,9 +78,9 @@ elif concept == "Data & BI":
         ("6", "Explain", "Show management what happened, why it matters and what needs action."),
     ]
 else:
-    st.header("Prompt engineering as controlled engineering", icon=":material/memory:")
+    st.header("AI engineering as controlled engineering", icon=":material/memory:")
     st.markdown(
-        "Prompt engineering supported NAV-delay rechecks and broker-data extraction. Prompts operated as testable "
+        "AI engineering supported NAV-delay rechecks and broker-data extraction. Prompts operated as testable "
         "control logic with source boundaries, structured outputs, validation and human sign-off."
     )
     steps = [

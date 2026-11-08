@@ -3,12 +3,13 @@ from __future__ import annotations
 import streamlit as st
 
 
-st.caption("OPTIONAL DEEP DIVE")
-st.title("Interactive lab", icon=":material/science:")
-st.markdown(
-    "Open this area when you want to test the calculations, controls and simulations behind the portfolio. "
-    "Every case uses fictional data and stays separate from the professional mission evidence."
-)
+with st.container(key="chapter_dark_page_header"):
+    st.caption("OPTIONAL DEEP DIVE")
+    st.title("Interactive lab", icon=":material/science:")
+    st.markdown(
+        "Open this area when you want to test the calculations, controls and simulations behind the portfolio. "
+        "Every case uses fictional data and stays separate from the professional mission evidence."
+    )
 
 st.subheader("Choose your depth")
 mode = st.segmented_control(

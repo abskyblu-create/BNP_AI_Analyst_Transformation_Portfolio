@@ -106,7 +106,7 @@ def _calculate_and_store(valuation_inputs: dict, cash_inputs: dict) -> None:
 
 with st.container(border=True):
     st.markdown("**Start here · one-click example**")
-    st.markdown("Run the sample with prepared figures. Then open **Read the result**. You can change the inputs or inspect individual holdings afterward.", text_alignment="justify")
+    st.markdown("Run the sample with prepared figures. Then open **Read the result**. You can change the inputs or inspect individual holdings afterward.", text_alignment="left")
     if st.button("Run sample NAV", type="primary", icon=":material/play_arrow:"):
         try:
             _calculate_and_store(st.session_state.valuation.copy(), st.session_state.cash_forecast_inputs.copy())
@@ -123,7 +123,7 @@ inputs_tab, result_tab, controls_tab, positions_tab, foundation_tab = st.tabs(
 with positions_tab:
     explain('positions')
     st.subheader("What makes up the investment value?")
-    st.markdown("Change a holding's quantity, price or FX rate, then save the new total to the NAV inputs. This is the detailed route for exploring valuation controls.", text_alignment="justify")
+    st.markdown("Change a holding's quantity, price or FX rate, then save the new total to the NAV inputs. This is the detailed route for exploring valuation controls.", text_alignment="left")
     edited_positions = aligned_editor(
         pd.DataFrame(st.session_state.valuation_positions),
         hide_index=True,
@@ -254,7 +254,7 @@ with inputs_tab:
         submitted = st.form_submit_button("Calculate draft Net Asset Value", type="primary", icon=":material/calculate:", width="stretch")
 
     with st.expander("Why are there two cash figures?"):
-        st.markdown("Ledger cash is an accounting balance. Forecast cash includes expected investor dealing and settlements, so it helps assess liquidity without changing the ledger automatically.", text_alignment="justify")
+        st.markdown("Ledger cash is an accounting balance. Forecast cash includes expected investor dealing and settlements, so it helps assess liquidity without changing the ledger automatically.", text_alignment="left")
     if submitted:
         valuation_inputs = {
             "portfolio": portfolio,
@@ -343,7 +343,7 @@ with controls_tab:
         st.success(st.session_state.pop("readiness_notice"))
     explain('quality')
     st.subheader("Source-readiness controls")
-    st.markdown("These controls apply to the current run and version. Saving a change invalidates any later review or approval.", text_alignment="justify")
+    st.markdown("These controls apply to the current run and version. Saving a change invalidates any later review or approval.", text_alignment="left")
     qi = st.session_state.quality_inputs
     with st.form("quality_inputs_form"):
         prices = st.checkbox("Approved price source received for the valuation point", value=qi["price_source_received"])
